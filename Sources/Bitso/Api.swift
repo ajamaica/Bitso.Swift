@@ -13,7 +13,8 @@ extension BitsoNetworkEnvironment {
 }
 
 public enum BitsoAPICall {
-   case available_books
+    case available_books
+    case ticker
 }
 
 public struct BitsoEndPoint: EndPointType {
@@ -33,6 +34,8 @@ public struct BitsoEndPoint: EndPointType {
         switch apiCall {
         case .available_books:
             return "available_books"
+        case .ticker:
+            return "ticker"
         }
     }
     var httpMethod: HTTPMethod {
