@@ -34,7 +34,8 @@ let package = Package(
         "komondor": [
             "pre-push": "swift test",
             "pre-commit": [
-                "swiftlint autocorrect --path Sources/",
+                "swiftlint",
+                "swiftlint autocorrect ",
                 "git add .",
             ],
         ],
