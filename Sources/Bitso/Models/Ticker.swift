@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Ticker: Decodable, Equatable {
+public struct Ticker: Decodable, Equatable {
     let book: String
     let volume: String
     let high: String

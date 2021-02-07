@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BitsoResponse<Payload: Decodable>: Decodable {
+public struct BitsoResponse<Payload: Decodable>: Decodable {
     let success: Bool
     let payload: Payload?
     let error: BitsoError?

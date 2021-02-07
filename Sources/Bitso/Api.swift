@@ -14,7 +14,8 @@ extension BitsoNetworkEnvironment {
 
 public enum BitsoAPICall {
     case available_books
-    case ticker
+    case ticker(bookID: BookSymbol)
+    case order_book(bookID: BookSymbol, aggregate: Bool)
 }
 
 public struct BitsoEndPoint: EndPointType {
@@ -24,11 +25,27 @@ public struct BitsoEndPoint: EndPointType {
         self.enviroment = enviroment
         self.apiCall = apiCall
     }
+
     var baseURL: URL {
         return enviroment.getEnviromentURL()
     }
+
     var task: HTTPTask {
-        return .request
+        switch apiCall {
+        case .available_books:
+            return .request
+        case .ticker(let bookID):
+            return .requestParameters(
+                bodyParameters: nil,
+                bodyEncoding: .urlEncoding,
+                urlParameters: ["book": bookID])
+        case .order_book(let bookID, let aggregate):
+            return .requestParameters(
+                bodyParameters: nil,
+                bodyEncoding: .urlEncoding,
+                urlParameters: ["book": bookID,
+                                "aggregate": aggregate])
+        }
     }
     var path: String {
         switch apiCall {
@@ -36,6 +53,8 @@ public struct BitsoEndPoint: EndPointType {
             return "available_books"
         case .ticker:
             return "ticker"
+        case .order_book:
+            return "order_book"
         }
     }
     var httpMethod: HTTPMethod {
