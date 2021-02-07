@@ -7,8 +7,9 @@
 
 import Foundation
 
-struct Book: Decodable, Equatable {
-    let book: String
+public typealias BookSymbol = String
+public struct Book: Decodable, Equatable {
+    let book: BookSymbol
     let minimum_amount: String
     let maximum_amount: String
     let minimum_price: String
