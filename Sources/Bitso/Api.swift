@@ -38,9 +38,9 @@ extension BitsoAPICall {
             urlParameters.setParameter(key: "aggregate", value: aggregate)
         case .trades(bookID: let bookID, marker: let marker, sort: let sort, limit: let limit):
             urlParameters.setParameter(key: "book", value: bookID)
-            if let marker = marker { urlParameters["marker"] = marker }
-            if let sort = sort { urlParameters["sort"] = sort }
-            if let limit = limit { urlParameters["limit"] = limit }
+            urlParameters.setParameter(key: "marker", value: marker)
+            urlParameters.setParameter(key: "sort", value: sort)
+            urlParameters.setParameter(key: "limit", value: limit)
         }
         return (bodyParameters, urlParameters)
     }
