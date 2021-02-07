@@ -14,7 +14,7 @@ Adds the header and request values to a given request.
  - with : the parameters to add
 
 */
-public struct JSONParameterEncoder: ParameterEncoder {
+struct JSONParameterEncoder: ParameterEncoder {
     public func encode(urlRequest: inout URLRequest, with parameters: Parameters) throws {
         do {
             let jsonAsData = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)

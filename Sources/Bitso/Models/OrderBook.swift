@@ -6,20 +6,8 @@
 //
 
 import Foundation
+
 public typealias OrderID = String
-public struct Ask: Equatable, Decodable {
-    let book: BookSymbol
-    let price: String
-    let amount: String
-}
-
-public struct Bid: Equatable, Decodable {
-    let book: BookSymbol
-    let price: String
-    let amount: String
-    let oid: OrderID?
-}
-
 public struct OrderBook: Equatable, Decodable {
     let asks: [Ask]
     let bids: [Bid]

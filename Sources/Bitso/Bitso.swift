@@ -32,6 +32,17 @@ public class Bitso {
         request(apiCall: .order_book(bookID: bookID, aggregate: aggregate), completion: completion)
     }
 
+    /**
+     This endpoint returns a list of recent trades from the specified book.
+     */
+    func tradesFor(bookID: BookSymbol,
+                   marker: Bool?,
+                   sort: SortType?,
+                   limit: Int?,
+                   completion: @escaping (Result<[Trade], BitsoError>) -> Void ) {
+        request(apiCall: .trades(bookID: bookID, marker: marker, sort: sort, limit: limit), completion: completion)
+    }
+
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,
                                              completion: @escaping (Result<Payload, BitsoError>) -> Void ) {
         router.request(.init(enviroment: environment, apiCall: apiCall)) { ( data, response, error) in
@@ -47,14 +58,17 @@ public class Bitso {
                                                            _ error: Error?) -> Result<Payload, BitsoError> {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .custom(BitsoDateDecodingStrategy.decode)
-
-        if let error = error { return .failure(BitsoError(code: "-2", message: error.localizedDescription)) }
-        if let data =  data,
-           let response = try? decoder.decode(BitsoResponse<Payload>.self, from: data) {
-            if let payload = response.payload {
-                return .success(payload)
-            } else if let error = response.error {
-                return .failure(error)
+        if let error = error { return .failure(BitsoError(code: "-2", message: "Network error : \(error.localizedDescription)" )) }
+        if let data =  data {
+            do {
+                let response = try decoder.decode(BitsoResponse<Payload>.self, from: data)
+                if let payload = response.payload {
+                    return .success(payload)
+                } else if let error = response.error {
+                    return .failure(error)
+                }
+            } catch let error {
+                return .failure(BitsoError(code: "-3", message: "Can not decode json with error: \(error.localizedDescription)"))
             }
         }
         return .failure(BitsoError.canNotReadError)

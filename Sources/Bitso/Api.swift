@@ -1,8 +1,8 @@
 import Foundation
 
 public enum BitsoNetworkEnvironment: String {
-    case productionV3 = "https://api-dev.bitso.com/v3/"
-    case developV3 = "https://api.bitso.com/v3/"
+    case productionV3 = "https://api.bitso.com/v3/"
+    case developV3 = "https://api-dev.bitso.com/v3/"
 }
 
 extension BitsoNetworkEnvironment {
@@ -12,10 +12,38 @@ extension BitsoNetworkEnvironment {
     }
 }
 
+public enum SortType: String {
+    case asc
+    case desc
+}
+
 public enum BitsoAPICall {
     case available_books
     case ticker(bookID: BookSymbol)
-    case order_book(bookID: BookSymbol, aggregate: Bool)
+    case order_book(bookID: BookSymbol, aggregate: Bool?)
+    case trades(bookID: BookSymbol, marker: Bool?, sort: SortType?, limit: Int?)
+}
+
+extension BitsoAPICall {
+    func parameters() -> (bodyParameters: Parameters, urlParameters: Parameters) {
+        var bodyParameters: Parameters = [:]
+        var urlParameters: Parameters = [:]
+        switch self {
+        case .available_books:
+            break
+        case .ticker(bookID: let bookID):
+            urlParameters.setParameter(key: "book", value: bookID)
+        case .order_book(bookID: let bookID, aggregate: let aggregate):
+            urlParameters.setParameter(key: "book", value: bookID)
+            urlParameters.setParameter(key: "aggregate", value: aggregate)
+        case .trades(bookID: let bookID, marker: let marker, sort: let sort, limit: let limit):
+            urlParameters.setParameter(key: "book", value: bookID)
+            if let marker = marker { urlParameters["marker"] = marker }
+            if let sort = sort { urlParameters["sort"] = sort }
+            if let limit = limit { urlParameters["limit"] = limit }
+        }
+        return (bodyParameters, urlParameters)
+    }
 }
 
 public struct BitsoEndPoint: EndPointType {
@@ -34,19 +62,24 @@ public struct BitsoEndPoint: EndPointType {
         switch apiCall {
         case .available_books:
             return .request
-        case .ticker(let bookID):
+        case .ticker:
             return .requestParameters(
                 bodyParameters: nil,
                 bodyEncoding: .urlEncoding,
-                urlParameters: ["book": bookID])
-        case .order_book(let bookID, let aggregate):
+                urlParameters: apiCall.parameters().urlParameters)
+        case .order_book:
             return .requestParameters(
                 bodyParameters: nil,
                 bodyEncoding: .urlEncoding,
-                urlParameters: ["book": bookID,
-                                "aggregate": aggregate])
+                urlParameters: apiCall.parameters().urlParameters)
+        case .trades:
+            return .requestParameters(
+                bodyParameters: nil,
+                bodyEncoding: .urlEncoding,
+                urlParameters: apiCall.parameters().urlParameters)
         }
     }
+
     var path: String {
         switch apiCall {
         case .available_books:
@@ -55,6 +88,8 @@ public struct BitsoEndPoint: EndPointType {
             return "ticker"
         case .order_book:
             return "order_book"
+        case .trades:
+            return "trades"
         }
     }
     var httpMethod: HTTPMethod {

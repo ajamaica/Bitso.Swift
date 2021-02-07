@@ -87,17 +87,40 @@ class BitsoTests: XCTestCase {
         wait(for: [expectation], timeout: 0.1)
     }
     
-    func test_live_call() throws {
+    func test_trades() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let router = Router<BitsoEndPoint>(session:URLSession.shared)
+        let session = URLSessionMock()
+        let json = stubbedResponse("trades")
+        let stubTrades = try! getDencoder().decode(BitsoResponse<[Trade]>.self, from: json)
+        session.data = json
+        
+        let router = Router<BitsoEndPoint>(session:session)
         let bitso = Bitso(router: router, environment: .developV3)
-        bitso.available_books { (result) in
-            if case let .success(book) = result {
-                XCTAssertNotNil(book)
+        bitso.tradesFor(bookID: "btc_mxn", marker: nil, sort: nil, limit: nil) { (result) in
+            if case let .success(trades) = result {
+                XCTAssertEqual(trades, stubTrades.payload)
                 expectation.fulfill()
             }
         }
-        wait(for: [expectation], timeout: 2)
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
+    func test_live_call() throws {
+        let expectation = XCTestExpectation(description: "True Network Call")
+        let router = Router<BitsoEndPoint>(session:URLSession.shared)
+        let bitso = Bitso(router: router, environment: .developV3)
+        bitso.tradesFor(bookID: "btc_mxn", marker: nil, sort: nil, limit: nil) { (result) in
+            switch result {
+            case .success(let trades):
+                XCTAssertNotNil(trades)
+                expectation.fulfill()
+            case .failure(let error):
+                debugPrint(error)
+                XCTFail()
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 5)
     }
     
     func test_bitso_error() throws {
