@@ -29,6 +29,26 @@ class BitsoTests: XCTestCase {
         wait(for: [expectation], timeout: 0.1)
     }
     
+    func test_order_book_aggregated() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let session = URLSessionMock()
+        let json = stubbedResponse("order_book_aggregated")
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let orderBook = try! getDencoder().decode(BitsoResponse<OrderBook>.self, from: json)
+        session.data = json
+        let router = Router<BitsoEndPoint>(session:session)
+        let bitso = Bitso(router: router, environment: .developV3)
+        bitso.orderBookFor(bookID: "btc_mxn") { (result) in
+            debugPrint(result)
+            if case let .success(orderbook) = result {
+                XCTAssertEqual(orderbook, orderBook.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
     func test_ticker() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
         let session = URLSessionMock()

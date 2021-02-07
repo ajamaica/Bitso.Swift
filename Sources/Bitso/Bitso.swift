@@ -24,7 +24,9 @@ public class Bitso {
     }
 
     /**
-     This endpoint returns a list of all open orders in the specified book. If the aggregate parameter is set to true, orders will be aggregated by price, and the response will only include the top 50 orders for each side of the book. If the aggregate parameter is set to false, the response will include the full order book.
+     This endpoint returns a list of all open orders in the specified book. If the aggregate parameter is set to true,
+     orders will be aggregated by price, and the response will only include the top 50 orders for each side of the book.
+     If the aggregate parameter is set to false, the response will include the full order book.
      */
     func orderBookFor(bookID: BookSymbol, aggregate: Bool = true, completion: @escaping (Result<OrderBook, BitsoError>) -> Void ) {
         request(apiCall: .order_book(bookID: bookID, aggregate: aggregate), completion: completion)
