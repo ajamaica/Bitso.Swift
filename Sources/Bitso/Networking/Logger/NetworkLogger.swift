@@ -49,7 +49,7 @@ class NetworkLogger {
      - parameters:
         - response: Describe the response for the network
      */
-    static func log(response: URLResponse) {
+    static func log(response: URLResponse, data: Data?) {
         debugPrint("\n - - - - - - - - - - Start  Response - - - - - - - - - - \n")
 
         let urlAsString = response.url?.absoluteString ?? ""
@@ -63,6 +63,10 @@ class NetworkLogger {
 
         if let response = response as? HTTPURLResponse {
             logOutput += "statusCode: \(response.statusCode) \n"
+        }
+
+        if let data = data {
+            logOutput += "data: \(String(data: data, encoding: .utf8) ?? "") \n"
         }
 
         debugPrint(logOutput)

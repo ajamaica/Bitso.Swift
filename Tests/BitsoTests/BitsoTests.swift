@@ -4,252 +4,283 @@ import XCTest
 class BitsoTests: XCTestCase {
     let key = ""
     let secret = ""
-    fileprivate func getDencoder() -> JSONDecoder{
+
+    fileprivate func getDencoder() -> JSONDecoder {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .custom(BitsoDateDecodingStrategy.decode)
         return decoder
     }
-    
+
+    fileprivate func getMockURLSession<Payload>(fileName: String) -> (URLSession, BitsoResponse<Payload>) {
+
+        let json = stubbedResponse(fileName)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let orderBook = try! getDencoder().decode(BitsoResponse<Payload>.self, from: json)
+
+        URLProtocolMock.testData = json
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [URLProtocolMock.self]
+        return (URLSession(configuration: config), orderBook)
+    }
+
     func test_order_book() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("order_book")
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        let orderBook = try! getDencoder().decode(BitsoResponse<OrderBook>.self, from: json)
-        session.data = json
-        let router = Router<BitsoEndPoint>(session:session)
+
+        let tuple: (session: URLSession, stub: BitsoResponse<OrderBook>) = getMockURLSession(fileName: "order_book")
+
+        let router = Router<BitsoEndPoint>(session: tuple.session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.orderBookFor(bookID: "btc_mxn") { (result) in
-            debugPrint(result)
             if case let .success(orderbook) = result {
-                XCTAssertEqual(orderbook, orderBook.payload)
+                XCTAssertEqual(orderbook, tuple.stub.payload)
                 expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 0.1)
     }
-    
+
     func test_order_book_aggregated() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("order_book_aggregated")
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        let orderBook = try! getDencoder().decode(BitsoResponse<OrderBook>.self, from: json)
-        session.data = json
-        let router = Router<BitsoEndPoint>(session:session)
+
+        let tuple: (session: URLSession, stub: BitsoResponse<OrderBook>) = getMockURLSession(fileName: "order_book_aggregated")
+
+        let router = Router<BitsoEndPoint>(session: tuple.session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.orderBookFor(bookID: "btc_mxn") { (result) in
-            debugPrint(result)
             if case let .success(orderbook) = result {
-                XCTAssertEqual(orderbook, orderBook.payload)
+                XCTAssertEqual(orderbook, tuple.stub.payload)
                 expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 0.1)
     }
-    
+
     func test_ticker() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("ticker")
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        let stubTick = try! getDencoder().decode(BitsoResponse<Ticker>.self, from: json)
-        session.data = json
-        let router = Router<BitsoEndPoint>(session:session)
+
+        let tuple: (session: URLSession, stub: BitsoResponse<Ticker>) = getMockURLSession(fileName: "ticker")
+
+        let router = Router<BitsoEndPoint>(session: tuple.session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.tickerFor(bookID: "btc_mxn") { (result) in
-            debugPrint(result)
             if case let .success(ticker) = result {
-                XCTAssertEqual(ticker, stubTick.payload)
+                XCTAssertEqual(ticker, tuple.stub.payload)
                 expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 0.1)
     }
-    
+
     func test_available_books() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("available_books")
-        let stubBook = try! getDencoder().decode(BitsoResponse<[Book]>.self, from: json)
-        session.data = json
-        
-        let router = Router<BitsoEndPoint>(session:session)
+        let tuple: (session: URLSession, stub: BitsoResponse<[Book]>) = getMockURLSession(fileName: "available_books")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.available_books { (result) in
             if case let .success(book) = result {
-                XCTAssertEqual(book, stubBook.payload)
+                XCTAssertEqual(book, tuple.stub.payload)
                 expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 0.1)
     }
-    
+
     func test_trades() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("trades")
-        let stubTrades = try! getDencoder().decode(BitsoResponse<[Trade]>.self, from: json)
-        session.data = json
-        
-        let router = Router<BitsoEndPoint>(session:session)
+
+        let tuple: (session: URLSession, stub: BitsoResponse<[Trade]>) = getMockURLSession(fileName: "trades")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.tradesFor(bookID: "btc_mxn", marker: nil, sort: nil, limit: nil) { (result) in
             if case let .success(trades) = result {
-                XCTAssertEqual(trades, stubTrades.payload)
+                XCTAssertEqual(trades, tuple.stub.payload)
                 expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 0.1)
     }
-    
+
     func test_account_status() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("account_status")
-        let stubAccountStatus = try! getDencoder().decode(BitsoResponse<AccountStatus>.self, from: json)
-        session.data = json
-        let router = Router<BitsoEndPoint>(session:session)
+
+        let tuple: (session: URLSession, stub: BitsoResponse<AccountStatus>) = getMockURLSession(fileName: "account_status")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.accountStatus { (result) in
             if case let .success(status) = result {
-                XCTAssertEqual(status, stubAccountStatus.payload)
+                XCTAssertEqual(status, tuple.stub.payload)
                 expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 0.1)
     }
-    
+
     func test_phone_number() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("phone_number")
-        let stub = try! getDencoder().decode(BitsoResponse<Phone>.self, from: json)
-        session.data = json
-        let router = Router<BitsoEndPoint>(session:session)
+        let tuple: (session: URLSession, stub: BitsoResponse<Phone>) = getMockURLSession(fileName: "phone_number")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
-        bitso.phoneNumber(phone_number: "5552525252"){ result in
+        bitso.phoneNumber(phone_number: "5552525252") { result in
             if case let .success(phone) = result {
-                XCTAssertEqual(phone, stub.payload)
+                XCTAssertEqual(phone, tuple.stub.payload)
                 expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 0.1)
     }
-    
+
     func test_phone_verification() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("phone_verification")
-        let stub = try! getDencoder().decode(BitsoResponse<Phone>.self, from: json)
-        session.data = json
-        let router = Router<BitsoEndPoint>(session:session)
+        let tuple: (session: URLSession, stub: BitsoResponse<Phone>) = getMockURLSession(fileName: "phone_verification")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
-        bitso.phoneVerification(verification_code: "1234"){ result in
+        bitso.phoneVerification(verification_code: "1234") { result in
             if case let .success(phone) = result {
-                XCTAssertEqual(phone, stub.payload)
+                XCTAssertEqual(phone, tuple.stub.payload)
                 expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 0.1)
     }
-    
+
     func test_balance() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("fees")
-        let stub = try! getDencoder().decode(BitsoResponse<CustomerFees>.self, from: json)
-        session.data = json
-        let router = Router<BitsoEndPoint>(session:session)
+        let tuple: (session: URLSession, stub: BitsoResponse<CustomerFees>) = getMockURLSession(fileName: "fees")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.fees { result in
             if case let .success(fees) = result {
-                XCTAssertEqual(fees, stub.payload)
+                XCTAssertEqual(fees, tuple.stub.payload)
                 expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 0.1)
     }
-    
+
     func test_ledger() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("ledger")
-        let stub = try! getDencoder().decode(BitsoResponse<[Ledger]>.self, from: json)
-        session.data = json
-        let router = Router<BitsoEndPoint>(session:session)
+        let tuple: (session: URLSession, stub: BitsoResponse<[Ledger]>) = getMockURLSession(fileName: "ledger")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.ledger(marker: nil, sort: nil, limit: nil) { (result) in
             if case let .success(ledger) = result {
-                XCTAssertEqual(ledger, stub.payload)
+                XCTAssertEqual(ledger, tuple.stub.payload)
                 expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 0.1)
     }
-    
+
     func test_ledger_tades() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("ledger")
-        let stub = try! getDencoder().decode(BitsoResponse<[Ledger]>.self, from: json)
-        session.data = json
-        let router = Router<BitsoEndPoint>(session:session)
+        let tuple: (session: URLSession, stub: BitsoResponse<[Ledger]>) = getMockURLSession(fileName: "ledger")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.ledgerTrades(marker: nil, sort: nil, limit: nil) { (result) in
             if case let .success(ledger) = result {
-                XCTAssertEqual(ledger, stub.payload)
+                XCTAssertEqual(ledger, tuple.stub.payload)
                 expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 0.1)
     }
-    
+
     func test_ledger_fees() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("ledger")
-        let stub = try! getDencoder().decode(BitsoResponse<[Ledger]>.self, from: json)
-        session.data = json
-        let router = Router<BitsoEndPoint>(session:session)
+        let tuple: (session: URLSession, stub: BitsoResponse<[Ledger]>) = getMockURLSession(fileName: "ledger")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.ledgerFees(marker: nil, sort: nil, limit: nil) { (result) in
             if case let .success(ledger) = result {
-                XCTAssertEqual(ledger, stub.payload)
+                XCTAssertEqual(ledger, tuple.stub.payload)
                 expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 0.1)
     }
-    
+
     func test_ledger_withdrawals() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("ledger")
-        let stub = try! getDencoder().decode(BitsoResponse<[Ledger]>.self, from: json)
-        session.data = json
-        let router = Router<BitsoEndPoint>(session:session)
+        let tuple: (session: URLSession, stub: BitsoResponse<[Ledger]>) = getMockURLSession(fileName: "ledger")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.ledgerWithdrawals(marker: nil, sort: nil, limit: nil) { (result) in
             if case let .success(ledger) = result {
-                XCTAssertEqual(ledger, stub.payload)
+                XCTAssertEqual(ledger, tuple.stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+
+    func test_withdrawals() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let tuple: (session: URLSession, stub: BitsoResponse<[Withdrawal]>) = getMockURLSession(fileName: "withdrawals")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.withdrawals(wid: "", marker: nil, limit: nil, status: nil, method: nil) { (result) in
+            if case let .success(withdrawals) = result {
+                XCTAssertEqual(withdrawals, tuple.stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+
+    func test_withdrawalsForWid() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let tuple: (session: URLSession, stub: BitsoResponse<[Withdrawal]>) = getMockURLSession(fileName: "withdrawals")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.withdrawalsForWid(wid: "", marker: nil, limit: nil, status: nil, method: nil) { (result) in
+            if case let .success(withdrawals) = result {
+                XCTAssertEqual(withdrawals, tuple.stub.payload)
                 expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 0.1)
     }
     
+    func test_withdrawalsForWids() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let tuple: (session: URLSession, stub: BitsoResponse<[Withdrawal]>) = getMockURLSession(fileName: "withdrawals")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.withdrawalsForWids(wids: [""], marker: nil, limit: nil, status: nil, method: nil) { (result) in
+            if case let .success(withdrawals) = result {
+                XCTAssertEqual(withdrawals, tuple.stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
+    func test_withdrawalsForOrigin() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let tuple: (session: URLSession, stub: BitsoResponse<[Withdrawal]>) = getMockURLSession(fileName: "withdrawals")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.withdrawalsForOrigin(origin_ids: [""], marker: nil, limit: nil, status: nil, method: nil) { (result) in
+            if case let .success(withdrawals) = result {
+                XCTAssertEqual(withdrawals, tuple.stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+
     func test_bitso_error() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
+
         let json = stubbedResponse("error")
         let stubError = try! getDencoder().decode(BitsoResponse<String>.self, from: json)
-        session.data = json
-        
-        let router = Router<BitsoEndPoint>(session:session)
+
+        URLProtocolMock.testData = json
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [URLProtocolMock.self]
+
+        let router = Router<BitsoEndPoint>(session: URLSession(configuration: config))
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.available_books { (result) in
             if case let .failure(error) = result {
@@ -259,10 +290,10 @@ class BitsoTests: XCTestCase {
         }
         wait(for: [expectation], timeout: 0.1)
     }
-    
+
     func test_live_call() throws {
         let expectation = XCTestExpectation(description: "True Network Call")
-        let router = Router<BitsoEndPoint>(session:URLSession.shared)
+        let router = Router<BitsoEndPoint>(session: URLSession.shared)
         let bitso = Bitso(key: "", secret: "", environment: .developV3, router: router)
         bitso.tradesFor(bookID: "btc_mxn", marker: nil, sort: nil, limit: nil) { (result) in
             switch result {
@@ -286,4 +317,3 @@ func stubbedResponse(_ filename: String) -> Data {
     let resourceURL = thisDirectory.appendingPathComponent("fixtures/\(filename).json")
     return try! Data(contentsOf: resourceURL)
 }
-
