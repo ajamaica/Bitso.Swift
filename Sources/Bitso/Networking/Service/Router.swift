@@ -70,18 +70,13 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
             switch route.task {
             case .request:
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                let signingHeader = bitsoSigning(key: "", secret: "", httpMethod: route.httpMethod, requestPath: route.path, parameters: nil)
-                self.addAdditionalHeaders(signingHeader, request: &request)
             case .requestParameters(let bodyParameters,
                                     let bodyEncoding,
                                     let urlParameters):
-
                 try self.configureParameters(bodyParameters: bodyParameters,
                                              bodyEncoding: bodyEncoding,
                                              urlParameters: urlParameters,
                                              request: &request)
-                let signingHeader = bitsoSigning(key: "", secret: "", httpMethod: route.httpMethod, requestPath: route.path, parameters: bodyParameters)
-                self.addAdditionalHeaders(signingHeader, request: &request)
             case .requestParametersAndHeaders(let bodyParameters,
                                               let bodyEncoding,
                                               let urlParameters,
@@ -92,11 +87,15 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
                                              bodyEncoding: bodyEncoding,
                                              urlParameters: urlParameters,
                                              request: &request)
-
-                let signingHeader = bitsoSigning(key: "", secret: "", httpMethod: route.httpMethod, requestPath: route.path, parameters: bodyParameters)
-                self.addAdditionalHeaders(signingHeader, request: &request)
             }
 
+            // Inject the Bitso Authorization Header = Authorization: Authorization Header <key>:<nonce>:<signature>
+            let signingHeader = bitsoSigning(key: route.key,
+                                             secret: route.secret,
+                                             httpMethod: route.httpMethod,
+                                             requestPath: route.path,
+                                             parameters: request.httpBody)
+            self.addAdditionalHeaders(signingHeader, request: &request)
             return request
         } catch {
             throw error

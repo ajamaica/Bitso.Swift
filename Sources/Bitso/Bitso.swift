@@ -1,7 +1,7 @@
 import Foundation
 
-public typealias BitsoKey = String
-public typealias BitsoSecret = String
+public typealias BitsoKey = Key
+public typealias BitsoSecret = Secret
 
 public class Bitso {
     private let environment: BitsoNetworkEnvironment
