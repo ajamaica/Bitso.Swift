@@ -25,8 +25,8 @@ public enum BitsoAPICall {
     case trades(bookID: BookSymbol, marker: Bool?, sort: SortType?, limit: Int?)
     /* Private */
     case account_status
-    case phone_number(phone_number: String)
-    case phone_verification(verification_code: String)
+    case phoneNumber(phone_number: String)
+    case phoneVerification(verification_code: String)
     case balance
     case fees
 
@@ -36,10 +36,14 @@ public enum BitsoAPICall {
     case ledgerFundings(marker: Bool?, sort: SortType?, limit: Int?)
     case ledgerWithdrawals(marker: Bool?, sort: SortType?, limit: Int?)
 
-    case withdrawals(wid: WithdrawalId, marker: Bool?, limit: Int?, status: WithdrawalStatus?, method: String?)
-    case withdrawalsForWid(wid: WithdrawalId, marker: Bool?, limit: Int?, status: WithdrawalStatus?, method: String?)
-    case withdrawalsForWids(wids: [WithdrawalId], marker: Bool?, limit: Int?, status: WithdrawalStatus?, method: String?)
-    case withdrawalsForOrigin(origin_ids: [OriginID], marker: Bool?, limit: Int?, status: WithdrawalStatus?, method: String?)
+    case withdrawals(wid: WithdrawalId, marker: Bool?, limit: Int?, status: Status?, method: String?)
+    case withdrawalsForWid(wid: WithdrawalId, marker: Bool?, limit: Int?, status: Status?, method: String?)
+    case withdrawalsForWids(wids: [WithdrawalId], marker: Bool?, limit: Int?, status: Status?, method: String?)
+    case withdrawalsForOrigin(origin_ids: [OriginID], marker: Bool?, limit: Int?, status: Status?, method: String?)
+
+    case fundings(marker: Bool?, limit: Int?, status: Status?, method: String?, txids: [String]?)
+    case fundingsTid(marker: Bool?, limit: Int?, status: Status?, method: String?, txids: [String]?)
+    case fundingsTidTidTid(marker: Bool?, limit: Int?, status: Status?, method: String?, txids: [String]?)
 }
 
 extension BitsoAPICall {
@@ -48,9 +52,9 @@ extension BitsoAPICall {
         switch self {
         case .account_status:
             break
-        case .phone_number(let phone_number):
+        case .phoneNumber(let phone_number):
             bodyParameters.setParameter(key: "phone_number", value: phone_number)
-        case .phone_verification(let verification_code):
+        case .phoneVerification(let verification_code):
             bodyParameters.setParameter(key: "verification_code", value: verification_code)
         default: break
         }
@@ -91,16 +95,25 @@ extension BitsoAPICall {
             urlParameters.setParameter(key: "method", value: method)
         case .withdrawalsForWids(let wids, let marker, let limit, let status, let method):
             urlParameters.setParameter(key: "marker", value: marker)
-            urlParameters.setParameter(key: "wids", value: wids)
+            urlParameters.setParameter(key: "wids", value: wids.joined(separator: ","))
             urlParameters.setParameter(key: "limit", value: limit)
             urlParameters.setParameter(key: "status", value: status)
             urlParameters.setParameter(key: "method", value: method)
         case .withdrawalsForOrigin(let origin_ids, let marker, let limit, let status, let method):
             urlParameters.setParameter(key: "marker", value: marker)
-            urlParameters.setParameter(key: "origin_ids", value: origin_ids)
+            urlParameters.setParameter(key: "origin_ids", value: origin_ids.joined(separator: ","))
             urlParameters.setParameter(key: "limit", value: limit)
             urlParameters.setParameter(key: "status", value: status)
             urlParameters.setParameter(key: "method", value: method)
+
+        case .fundings(let marker, let limit, let status, let method, let txids),
+             .fundingsTidTidTid(let marker, let limit, let status, let method, let txids),
+             .fundingsTid(let marker, let limit, let status, let method, let txids):
+                urlParameters.setParameter(key: "marker", value: marker)
+                urlParameters.setParameter(key: "limit", value: limit)
+                urlParameters.setParameter(key: "status", value: status)
+                urlParameters.setParameter(key: "method", value: method)
+                urlParameters.setParameter(key: "txids", value: txids?.joined(separator: ","))
         default: break
         }
         return urlParameters
@@ -149,12 +162,12 @@ public struct BitsoEndPoint: EndPointType {
                 urlParameters: apiCall.urlParameters)
         case .account_status:
             return .request
-        case .phone_number:
+        case .phoneNumber:
             return .requestParameters(
                 bodyParameters: apiCall.bodyParameters,
                 bodyEncoding: .urlEncoding,
                 urlParameters: nil)
-        case .phone_verification:
+        case .phoneVerification:
             return .requestParameters(
                 bodyParameters: apiCall.bodyParameters,
                 bodyEncoding: .urlEncoding,
@@ -169,6 +182,11 @@ public struct BitsoEndPoint: EndPointType {
                 bodyEncoding: .urlEncoding,
                 urlParameters: apiCall.urlParameters)
         case .withdrawals, .withdrawalsForWid, .withdrawalsForWids, .withdrawalsForOrigin:
+            return .requestParameters(
+                bodyParameters: nil,
+                bodyEncoding: .urlEncoding,
+                urlParameters: apiCall.urlParameters)
+        case .fundings, .fundingsTid, .fundingsTidTidTid:
             return .requestParameters(
                 bodyParameters: nil,
                 bodyEncoding: .urlEncoding,
@@ -188,9 +206,9 @@ public struct BitsoEndPoint: EndPointType {
             return "trades"
         case .account_status:
             return "account_status"
-        case .phone_number:
+        case .phoneNumber:
             return "phone_number"
-        case .phone_verification:
+        case .phoneVerification:
             return "phone_verification"
         case .balance:
             return "balance"
@@ -210,6 +228,12 @@ public struct BitsoEndPoint: EndPointType {
             return "withdrawals"
         case .withdrawalsForWid:
             return "withdrawals/wid"
+        case .fundings:
+            return "fundings"
+        case .fundingsTid:
+            return "fundings/fid"
+        case .fundingsTidTidTid:
+            return "fundings/fid-fid-fid"
         }
     }
 
@@ -225,9 +249,9 @@ public struct BitsoEndPoint: EndPointType {
             return .get
         case .account_status:
             return .get
-        case .phone_number:
+        case .phoneNumber:
             return .post
-        case .phone_verification:
+        case .phoneVerification:
             return .post
         case .balance:
             return .get
@@ -236,6 +260,8 @@ public struct BitsoEndPoint: EndPointType {
         case .ledger, .ledgerTrades, .ledgerFees, .ledgerFundings, .ledgerWithdrawals:
             return .get
         case .withdrawals, .withdrawalsForWid, .withdrawalsForWids, .withdrawalsForOrigin:
+            return .get
+        case .fundings, .fundingsTid, .fundingsTidTidTid:
             return .get
         }
     }
