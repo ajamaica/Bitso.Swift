@@ -92,9 +92,11 @@ public struct BitsoEndPoint: EndPointType {
             return "trades"
         }
     }
+
     var httpMethod: HTTPMethod {
         return .get
     }
+
     var headers: HTTPHeaders? {
         return nil
     }
