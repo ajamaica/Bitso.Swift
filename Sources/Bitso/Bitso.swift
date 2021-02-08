@@ -208,13 +208,17 @@ public class Bitso {
                                                method: method),
                 completion: completion)
     }
-
+    /**
+     Returns detailed info on a user’s fundings.
+     */
     func fundings(txids: [String]?,
                   completion: @escaping (Result<[Funding], BitsoError>) -> Void
     ) {
         request(apiCall: .fundings(marker: nil, limit: nil, status: nil, method: nil, txids: txids), completion: completion)
     }
-
+    /**
+     Returns detailed info on a user’s fundings.
+     */
     func fundings(marker: Bool?,
                   limit: Int?,
                   status: Status?,
@@ -223,7 +227,9 @@ public class Bitso {
     ) {
         request(apiCall: .fundings(marker: marker, limit: limit, status: status, method: method, txids: nil), completion: completion)
     }
-
+    /**
+     Returns detailed info on a user’s fundings.
+     */
     func fundingsTid(marker: Bool?,
                      limit: Int?,
                      status: Status?,
@@ -232,13 +238,17 @@ public class Bitso {
     ) {
         request(apiCall: .fundingsTid(marker: marker, limit: limit, status: status, method: method, txids: nil), completion: completion)
     }
-
+    /**
+     Returns detailed info on a user’s fundings.
+     */
     func fundingsTid(txids: [String]?,
                      completion: @escaping (Result<[Funding], BitsoError>) -> Void
     ) {
         request(apiCall: .fundingsTid(marker: nil, limit: nil, status: nil, method: nil, txids: txids), completion: completion)
     }
-
+    /**
+     Returns detailed info on a user’s fundings.
+     */
     func fundingsTidTidTid(marker: Bool?,
                            limit: Int?,
                            status: Status?,
@@ -252,7 +262,9 @@ public class Bitso {
                                             txids: nil),
                 completion: completion)
     }
-
+    /**
+     Returns detailed info on a user’s fundings.
+     */
     func fundingsTidTidTid(txids: [String]?,
                            completion: @escaping (Result<[Funding], BitsoError>) -> Void
     ) {
