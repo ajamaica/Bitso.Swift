@@ -83,6 +83,14 @@ public class Bitso {
         request(apiCall: .balance, completion: completion)
     }
 
+    /*
+     This endpoint returns information on customer fees for all
+     available order books, and withdrawal fees for applicable currencies.
+     */
+    func fees(completion: @escaping (Result<CustomerFees, BitsoError>) -> Void ) {
+        request(apiCall: .fees, completion: completion)
+    }
+
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,
                                              completion: @escaping (Result<Payload, BitsoError>) -> Void ) {
         router.request(.init(

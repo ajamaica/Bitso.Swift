@@ -28,6 +28,7 @@ public enum BitsoAPICall {
     case phone_number(phone_number: String)
     case phone_verification(verification_code: String)
     case balance
+    case fees
 }
 
 extension BitsoAPICall {
@@ -54,6 +55,8 @@ extension BitsoAPICall {
         case .phone_verification(verification_code: let verification_code):
             bodyParameters.setParameter(key: verification_code, value: verification_code)
         case .balance:
+            break
+        case .fees:
             break
         }
         return (bodyParameters, urlParameters)
@@ -114,6 +117,8 @@ public struct BitsoEndPoint: EndPointType {
                 urlParameters: nil)
         case .balance:
             return .request
+        case .fees:
+            return .request
         }
     }
 
@@ -135,6 +140,8 @@ public struct BitsoEndPoint: EndPointType {
             return "phone_verification"
         case .balance:
             return "balance"
+        case .fees:
+            return "fees"
         }
     }
 
@@ -155,6 +162,8 @@ public struct BitsoEndPoint: EndPointType {
         case .phone_verification:
             return .post
         case .balance:
+            return .get
+        case .fees:
             return .get
         }
     }

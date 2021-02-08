@@ -160,14 +160,14 @@ class BitsoTests: XCTestCase {
     func test_balance() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
         let session = URLSessionMock()
-        let json = stubbedResponse("balance")
-        let stub = try! getDencoder().decode(BitsoResponse<Balances>.self, from: json)
+        let json = stubbedResponse("fees")
+        let stub = try! getDencoder().decode(BitsoResponse<CustomerFees>.self, from: json)
         session.data = json
         let router = Router<BitsoEndPoint>(session:session)
         let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
-        bitso.balance { result in
-            if case let .success(balance) = result {
-                XCTAssertEqual(balance, stub.payload)
+        bitso.fees { result in
+            if case let .success(fees) = result {
+                XCTAssertEqual(fees, stub.payload)
                 expectation.fulfill()
             }
         }
