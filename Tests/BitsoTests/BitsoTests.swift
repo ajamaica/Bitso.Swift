@@ -157,6 +157,23 @@ class BitsoTests: XCTestCase {
         wait(for: [expectation], timeout: 0.1)
     }
     
+    func test_balance() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let session = URLSessionMock()
+        let json = stubbedResponse("balance")
+        let stub = try! getDencoder().decode(BitsoResponse<Balances>.self, from: json)
+        session.data = json
+        let router = Router<BitsoEndPoint>(session:session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.balance { result in
+            if case let .success(balance) = result {
+                XCTAssertEqual(balance, stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
     func test_bitso_error() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
         let session = URLSessionMock()
