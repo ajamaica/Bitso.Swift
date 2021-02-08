@@ -62,25 +62,63 @@ public class Bitso {
         request(apiCall: .account_status, completion: completion)
     }
 
-    /*
+    /**
      This endpoint is used to register Mobile phone number for verification.
      */
     func phoneNumber(phone_number: String, completion: @escaping (Result<Phone, BitsoError>) -> Void ) {
         request(apiCall: .phone_number(phone_number: phone_number), completion: completion)
     }
 
-    /*
+    /**
      This endpoint is used to verify a registered mobile phone number
      */
     func phoneVerification(verification_code: String, completion: @escaping (Result<Phone, BitsoError>) -> Void ) {
         request(apiCall: .phone_verification(verification_code: verification_code), completion: completion)
     }
 
-    /*
+    /**
      This endpoint returns information concerning the user’s balances for all supported currencies.
      */
     func balance(completion: @escaping (Result<Balances, BitsoError>) -> Void ) {
         request(apiCall: .balance, completion: completion)
+    }
+
+    /**
+     Returns a list of all the user’s registered operations.
+     */
+    func ledger(marker: Bool?,
+                sort: SortType?,
+                limit: Int?,
+                completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
+        request(apiCall: .ledger(marker: marker, sort: sort, limit: limit), completion: completion)
+    }
+
+    func ledgerTrades(marker: Bool?,
+                      sort: SortType?,
+                      limit: Int?,
+                      completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
+        request(apiCall: .ledgerTrades(marker: marker, sort: sort, limit: limit), completion: completion)
+    }
+
+    func ledgerFees(marker: Bool?,
+                    sort: SortType?,
+                    limit: Int?,
+                    completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
+        request(apiCall: .ledgerFees(marker: marker, sort: sort, limit: limit), completion: completion)
+    }
+
+    func ledgerFundings(marker: Bool?,
+                        sort: SortType?,
+                        limit: Int?,
+                        completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
+        request(apiCall: .ledgerFundings(marker: marker, sort: sort, limit: limit), completion: completion)
+    }
+
+    func ledgerWithdrawals(marker: Bool?,
+                           sort: SortType?,
+                           limit: Int?,
+                           completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
+        request(apiCall: .ledgerWithdrawals(marker: marker, sort: sort, limit: limit), completion: completion)
     }
 
     /*
