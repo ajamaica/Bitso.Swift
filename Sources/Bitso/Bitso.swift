@@ -66,14 +66,14 @@ public class Bitso {
      This endpoint is used to register Mobile phone number for verification.
      */
     func phoneNumber(phone_number: String, completion: @escaping (Result<Phone, BitsoError>) -> Void ) {
-        request(apiCall: .phone_number(phone_number: phone_number), completion: completion)
+        request(apiCall: .phoneNumber(phone_number: phone_number), completion: completion)
     }
 
     /**
      This endpoint is used to verify a registered mobile phone number
      */
     func phoneVerification(verification_code: String, completion: @escaping (Result<Phone, BitsoError>) -> Void ) {
-        request(apiCall: .phone_verification(verification_code: verification_code), completion: completion)
+        request(apiCall: .phoneVerification(verification_code: verification_code), completion: completion)
     }
 
     /**
@@ -145,11 +145,11 @@ public class Bitso {
      Returns detailed info on a user’s fund withdrawals.
      */
     func withdrawals(wid: WithdrawalId,
-                    marker: Bool?,
-                    limit: Int?,
-                    status: WithdrawalStatus?,
-                    method: String?,
-                    completion: @escaping (Result<[Withdrawal], BitsoError>) -> Void ) {
+                     marker: Bool?,
+                     limit: Int?,
+                     status: Status?,
+                     method: String?,
+                     completion: @escaping (Result<[Withdrawal], BitsoError>) -> Void ) {
         request(apiCall: .withdrawals(wid: wid,
                                       marker: marker,
                                       limit: limit,
@@ -164,7 +164,7 @@ public class Bitso {
     func withdrawalsForWid(wid: WithdrawalId,
                            marker: Bool?,
                            limit: Int?,
-                           status: WithdrawalStatus?,
+                           status: Status?,
                            method: String?,
                            completion: @escaping (Result<[Withdrawal], BitsoError>) -> Void ) {
         request(apiCall: .withdrawalsForWid(wid: wid,
@@ -181,7 +181,7 @@ public class Bitso {
     func withdrawalsForWids(wids: [WithdrawalId],
                             marker: Bool?,
                             limit: Int?,
-                            status: WithdrawalStatus?,
+                            status: Status?,
                             method: String?,
                             completion: @escaping (Result<[Withdrawal], BitsoError>) -> Void ) {
         request(apiCall: .withdrawalsForWids(wids: wids,
@@ -198,7 +198,7 @@ public class Bitso {
     func withdrawalsForOrigin(origin_ids: [OriginID],
                               marker: Bool?,
                               limit: Int?,
-                              status: WithdrawalStatus?,
+                              status: Status?,
                               method: String?,
                               completion: @escaping (Result<[Withdrawal], BitsoError>) -> Void ) {
         request(apiCall: .withdrawalsForOrigin(origin_ids: origin_ids,
@@ -207,6 +207,68 @@ public class Bitso {
                                                status: status,
                                                method: method),
                 completion: completion)
+    }
+    /**
+     Returns detailed info on a user’s fundings.
+     */
+    func fundings(txids: [String],
+                  completion: @escaping (Result<[Funding], BitsoError>) -> Void
+    ) {
+        request(apiCall: .fundings(marker: nil, limit: nil, status: nil, method: nil, txids: txids), completion: completion)
+    }
+    /**
+     Returns detailed info on a user’s fundings.
+     */
+    func fundings(marker: Bool?,
+                  limit: Int?,
+                  status: Status?,
+                  method: String?,
+                  completion: @escaping (Result<[Funding], BitsoError>) -> Void
+    ) {
+        request(apiCall: .fundings(marker: marker, limit: limit, status: status, method: method, txids: nil), completion: completion)
+    }
+    /**
+     Returns detailed info on a user’s fundings.
+     */
+    func fundingsTid(marker: Bool?,
+                     limit: Int?,
+                     status: Status?,
+                     method: String?,
+                     completion: @escaping (Result<[Funding], BitsoError>) -> Void
+    ) {
+        request(apiCall: .fundingsTid(marker: marker, limit: limit, status: status, method: method, txids: nil), completion: completion)
+    }
+    /**
+     Returns detailed info on a user’s fundings.
+     */
+    func fundingsTid(txids: [String],
+                     completion: @escaping (Result<[Funding], BitsoError>) -> Void
+    ) {
+        request(apiCall: .fundingsTid(marker: nil, limit: nil, status: nil, method: nil, txids: txids), completion: completion)
+    }
+    /**
+     Returns detailed info on a user’s fundings.
+     */
+    func fundingsTidTidTid(marker: Bool?,
+                           limit: Int?,
+                           status: Status?,
+                           method: String?,
+                           completion: @escaping (Result<[Funding], BitsoError>) -> Void
+    ) {
+        request(apiCall: .fundingsTidTidTid(marker: marker,
+                                            limit: limit,
+                                            status: status,
+                                            method: method,
+                                            txids: nil),
+                completion: completion)
+    }
+    /**
+     Returns detailed info on a user’s fundings.
+     */
+    func fundingsTidTidTid(txids: [String],
+                           completion: @escaping (Result<[Funding], BitsoError>) -> Void
+    ) {
+        request(apiCall: .fundingsTidTidTid(marker: nil, limit: nil, status: nil, method: nil, txids: txids), completion: completion)
     }
 
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,
