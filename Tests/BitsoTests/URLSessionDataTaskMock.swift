@@ -1,43 +1,29 @@
-//
-//  URLSessionDataTaskMock.swift
-//  Bitso.SwiftTests
-//
-//  Created by Arturo Jamaica on 2021/02/07.
-//
-
 import Foundation
 
-class URLSessionDataTaskMock: URLSessionDataTask {
-    private let closure: () -> Void
-    
-    init(closure: @escaping () -> Void) {
-        self.closure = closure
+class URLProtocolMock: URLProtocol {
+    // this dictionary maps URLs to test data
+    static var testData = Data()
+    static var error: Error?
+
+    override class func canInit(with request: URLRequest) -> Bool {
+        return true
     }
 
-    override func resume() {
-        closure()
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        return request
     }
-}
 
-class URLSessionMock: URLSession {
-    typealias CompletionHandler = (Data?, URLResponse?, Error?) -> Void
-    
-    var data: Data?
-    var error: Error?
-    
-    override func dataTask(with request: URLRequest,
-                           completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
-        let data = self.data
-        let error = self.error
-        
-        return URLSessionDataTaskMock {
-            completionHandler(data,
-                              HTTPURLResponse(
-                                url: URL(string: "http://localhost.com")!,
-                                statusCode: 200,
-                                httpVersion: nil,
-                                headerFields: nil),
-                              error)
-        }
+    override func startLoading() {
+        let response = HTTPURLResponse(
+            url: URL(string: "http://localhost.com")!,
+            statusCode: 200,
+            httpVersion: nil,
+            headerFields: nil)
+
+        self.client?.urlProtocol(self, didReceive: response!, cacheStoragePolicy: URLCache.StoragePolicy.notAllowed)
+        self.client?.urlProtocol(self, didLoad: URLProtocolMock.testData)
+        self.client?.urlProtocolDidFinishLoading(self)
     }
+
+    override func stopLoading() { }
 }

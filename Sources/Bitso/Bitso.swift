@@ -93,6 +93,9 @@ public class Bitso {
         request(apiCall: .ledger(marker: marker, sort: sort, limit: limit), completion: completion)
     }
 
+    /**
+     Returns a list of all the user’s registered operations.
+     */
     func ledgerTrades(marker: Bool?,
                       sort: SortType?,
                       limit: Int?,
@@ -100,6 +103,9 @@ public class Bitso {
         request(apiCall: .ledgerTrades(marker: marker, sort: sort, limit: limit), completion: completion)
     }
 
+    /**
+     Returns a list of all the user’s registered operations.
+     */
     func ledgerFees(marker: Bool?,
                     sort: SortType?,
                     limit: Int?,
@@ -107,6 +113,9 @@ public class Bitso {
         request(apiCall: .ledgerFees(marker: marker, sort: sort, limit: limit), completion: completion)
     }
 
+    /**
+     Returns a list of all the user’s registered operations.
+     */
     func ledgerFundings(marker: Bool?,
                         sort: SortType?,
                         limit: Int?,
@@ -114,6 +123,9 @@ public class Bitso {
         request(apiCall: .ledgerFundings(marker: marker, sort: sort, limit: limit), completion: completion)
     }
 
+    /**
+     Returns a list of all the user’s registered operations.
+     */
     func ledgerWithdrawals(marker: Bool?,
                            sort: SortType?,
                            limit: Int?,
@@ -127,6 +139,74 @@ public class Bitso {
      */
     func fees(completion: @escaping (Result<CustomerFees, BitsoError>) -> Void ) {
         request(apiCall: .fees, completion: completion)
+    }
+
+    /*
+     Returns detailed info on a user’s fund withdrawals.
+     */
+    func withdrawals(wid: WithdrawalId,
+                    marker: Bool?,
+                    limit: Int?,
+                    status: WithdrawalStatus?,
+                    method: String?,
+                    completion: @escaping (Result<[Withdrawal], BitsoError>) -> Void ) {
+        request(apiCall: .withdrawals(wid: wid,
+                                      marker: marker,
+                                      limit: limit,
+                                      status: status,
+                                      method: method),
+                completion: completion)
+    }
+
+    /*
+     Returns detailed info on a user’s fund withdrawals.
+     */
+    func withdrawalsForWid(wid: WithdrawalId,
+                           marker: Bool?,
+                           limit: Int?,
+                           status: WithdrawalStatus?,
+                           method: String?,
+                           completion: @escaping (Result<[Withdrawal], BitsoError>) -> Void ) {
+        request(apiCall: .withdrawalsForWid(wid: wid,
+                                            marker: marker,
+                                            limit: limit,
+                                            status: status,
+                                            method: method),
+                completion: completion)
+    }
+
+    /*
+     Returns detailed info on a user’s fund withdrawals.
+     */
+    func withdrawalsForWids(wids: [WithdrawalId],
+                            marker: Bool?,
+                            limit: Int?,
+                            status: WithdrawalStatus?,
+                            method: String?,
+                            completion: @escaping (Result<[Withdrawal], BitsoError>) -> Void ) {
+        request(apiCall: .withdrawalsForWids(wids: wids,
+                                             marker: marker,
+                                             limit: limit,
+                                             status: status,
+                                             method: method),
+                completion: completion)
+    }
+
+    /*
+     Returns detailed info on a user’s fund withdrawals.
+     */
+    func withdrawalsForOrigin(origin_ids: [OriginID],
+                              marker: Bool?,
+                              limit: Int?,
+                              status: WithdrawalStatus?,
+                              method: String?,
+                              completion: @escaping (Result<[Withdrawal], BitsoError>) -> Void ) {
+        request(apiCall: .withdrawalsForOrigin(origin_ids: origin_ids,
+                                               marker: marker,
+                                               limit: limit,
+                                               status: status,
+                                               method: method),
+                completion: completion)
     }
 
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,

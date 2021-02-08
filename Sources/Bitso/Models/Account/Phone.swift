@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct Phone: Decodable, Equatable {
+public struct Phone: Decodable, Equatable {
     let phone: String
 }

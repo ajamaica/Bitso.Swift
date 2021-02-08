@@ -1,6 +1,6 @@
 import Foundation
 
-struct Ledger: Decodable, Equatable {
+public struct Ledger: Decodable, Equatable {
     let eid: String
     let operation: String
     let created_at: Date
@@ -8,9 +8,9 @@ struct Ledger: Decodable, Equatable {
     let details: LedgerDetails
 }
 
-struct LedgerDetails: Decodable, Equatable {
+public struct LedgerDetails: Decodable, Equatable {
     let tid: Int?
     let oid: String?
-    let wid: String?
+    let wid: WithdrawalId?
     let method: String?
 }

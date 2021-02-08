@@ -20,10 +20,12 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
     // Urlsession task reference
     private var task: URLSessionTask?
     private let session: URLSession
+    private let enableDebugLogs: Bool
 
     // By using a default argument (in this case .shared) we can add dependency
-    init(session: URLSession = .shared) {
+    init(session: URLSession = .shared, enableDebugLogs: Bool = false) {
         self.session = session
+        self.enableDebugLogs = enableDebugLogs
     }
 
     /**
@@ -36,9 +38,9 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
 
         do {
             let request = try self.buildRequest(from: route)
-            NetworkLogger.log(request: request)
-            task = session.dataTask(with: request, completionHandler: { data, response, error in
-                if let response = response { NetworkLogger.log(response: response)  }
+            if enableDebugLogs { NetworkLogger.log(request: request) }
+            task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+                if let response = response, self?.enableDebugLogs == true { NetworkLogger.log(response: response, data: data)  }
                 completion(data, response, error)
             })
         } catch {
