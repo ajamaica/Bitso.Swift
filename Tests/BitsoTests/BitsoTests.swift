@@ -123,6 +123,40 @@ class BitsoTests: XCTestCase {
         wait(for: [expectation], timeout: 0.1)
     }
     
+    func test_phone_number() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let session = URLSessionMock()
+        let json = stubbedResponse("phone_number")
+        let stub = try! getDencoder().decode(BitsoResponse<Phone>.self, from: json)
+        session.data = json
+        let router = Router<BitsoEndPoint>(session:session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.phoneNumber(phone_number: "5552525252"){ result in
+            if case let .success(phone) = result {
+                XCTAssertEqual(phone, stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
+    func test_phone_verification() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let session = URLSessionMock()
+        let json = stubbedResponse("phone_verification")
+        let stub = try! getDencoder().decode(BitsoResponse<Phone>.self, from: json)
+        session.data = json
+        let router = Router<BitsoEndPoint>(session:session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.phoneVerification(verification_code: "1234"){ result in
+            if case let .success(phone) = result {
+                XCTAssertEqual(phone, stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
     func test_bitso_error() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
         let session = URLSessionMock()
