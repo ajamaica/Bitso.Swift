@@ -6,12 +6,12 @@
 //
 
 import Foundation
-
+typealias CurrencyId = String
 struct Balances: Decodable, Equatable {
     let balances: [Balance]
 }
 struct Balance: Decodable, Equatable {
-    let currency: String
+    let currency: CurrencyId
     let total: String
     let locked: String
     let available: String
