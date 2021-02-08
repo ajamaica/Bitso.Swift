@@ -54,6 +54,14 @@ public class Bitso {
         request(apiCall: .trades(bookID: bookID, marker: marker, sort: sort, limit: limit), completion: completion)
     }
 
+    /**
+     This endpoint returns information concerning the user’s account status,
+     documents uploaded, and transaction limits.
+     */
+    func accountStatus(completion: @escaping (Result<AccountStatus, BitsoError>) -> Void ) {
+        request(apiCall: .account_status, completion: completion)
+    }
+
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,
                                              completion: @escaping (Result<Payload, BitsoError>) -> Void ) {
         router.request(.init(
