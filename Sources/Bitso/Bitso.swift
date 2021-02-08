@@ -245,7 +245,12 @@ public class Bitso {
                            method: String?,
                            completion: @escaping (Result<[Funding], BitsoError>) -> Void
     ) {
-        request(apiCall: .fundingsTidTidTid(marker: marker, limit: limit, status: status, method: method, txids: nil), completion: completion)
+        request(apiCall: .fundingsTidTidTid(marker: marker,
+                                            limit: limit,
+                                            status: status,
+                                            method: method,
+                                            txids: nil),
+                completion: completion)
     }
 
     func fundingsTidTidTid(txids: [String]?,
