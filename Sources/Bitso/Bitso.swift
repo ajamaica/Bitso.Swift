@@ -211,7 +211,7 @@ public class Bitso {
     /**
      Returns detailed info on a user’s fundings.
      */
-    func fundings(txids: [String]?,
+    func fundings(txids: [String],
                   completion: @escaping (Result<[Funding], BitsoError>) -> Void
     ) {
         request(apiCall: .fundings(marker: nil, limit: nil, status: nil, method: nil, txids: txids), completion: completion)
@@ -241,7 +241,7 @@ public class Bitso {
     /**
      Returns detailed info on a user’s fundings.
      */
-    func fundingsTid(txids: [String]?,
+    func fundingsTid(txids: [String],
                      completion: @escaping (Result<[Funding], BitsoError>) -> Void
     ) {
         request(apiCall: .fundingsTid(marker: nil, limit: nil, status: nil, method: nil, txids: txids), completion: completion)
@@ -265,7 +265,7 @@ public class Bitso {
     /**
      Returns detailed info on a user’s fundings.
      */
-    func fundingsTidTidTid(txids: [String]?,
+    func fundingsTidTidTid(txids: [String],
                            completion: @escaping (Result<[Funding], BitsoError>) -> Void
     ) {
         request(apiCall: .fundingsTidTidTid(marker: nil, limit: nil, status: nil, method: nil, txids: txids), completion: completion)
