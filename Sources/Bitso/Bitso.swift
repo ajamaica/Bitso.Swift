@@ -1,12 +1,23 @@
 import Foundation
 
+public typealias BitsoKey = Key
+public typealias BitsoSecret = Secret
+
 public class Bitso {
     private let environment: BitsoNetworkEnvironment
     private let router: Router<BitsoEndPoint>
+    private let key: BitsoKey
+    private let secret: BitsoSecret
 
-    init(router: Router<BitsoEndPoint>, environment: BitsoNetworkEnvironment) {
+    init(key: BitsoKey,
+         secret: BitsoSecret,
+         environment: BitsoNetworkEnvironment,
+         router: Router<BitsoEndPoint> = Router<BitsoEndPoint>(session: URLSession.shared)
+    ) {
         self.router = router
         self.environment = environment
+        self.key = key
+        self.secret = secret
     }
 
     /**
@@ -45,32 +56,38 @@ public class Bitso {
 
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,
                                              completion: @escaping (Result<Payload, BitsoError>) -> Void ) {
-        router.request(.init(enviroment: environment, apiCall: apiCall)) { ( data, response, error) in
+        router.request(.init(
+                        enviroment: environment,
+                        key: key,
+                        secret: secret,
+                        apiCall: apiCall)
+        ) { ( data, response, error) in
             guard let response = response as? HTTPURLResponse else {
                 return completion(.failure(BitsoError.canNotReadError))
             }
-            completion(self.handleNetworkResponse(response, data, error))
+            completion(handleNetworkResponse(response, data, error))
         }
     }
 
-    private func handleNetworkResponse<Payload: Decodable>(_ response: HTTPURLResponse,
-                                                           _ data: Data?,
-                                                           _ error: Error?) -> Result<Payload, BitsoError> {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .custom(BitsoDateDecodingStrategy.decode)
-        if let error = error { return .failure(BitsoError(code: "-2", message: "Network error : \(error.localizedDescription)" )) }
-        if let data =  data {
-            do {
-                let response = try decoder.decode(BitsoResponse<Payload>.self, from: data)
-                if let payload = response.payload {
-                    return .success(payload)
-                } else if let error = response.error {
-                    return .failure(error)
-                }
-            } catch let error {
-                return .failure(BitsoError(code: "-3", message: "Can not decode json with error: \(error.localizedDescription)"))
+}
+
+private func handleNetworkResponse<Payload: Decodable>(_ response: HTTPURLResponse,
+                                                       _ data: Data?,
+                                                       _ error: Error?) -> Result<Payload, BitsoError> {
+    let decoder = JSONDecoder()
+    decoder.dateDecodingStrategy = .custom(BitsoDateDecodingStrategy.decode)
+    if let error = error { return .failure(BitsoError(code: "-2", message: "Network error : \(error.localizedDescription)" )) }
+    if let data =  data {
+        do {
+            let response = try decoder.decode(BitsoResponse<Payload>.self, from: data)
+            if let payload = response.payload {
+                return .success(payload)
+            } else if let error = response.error {
+                return .failure(error)
             }
+        } catch let error {
+            return .failure(BitsoError(code: "-3", message: "Can not decode json with error: \(error.localizedDescription)"))
         }
-        return .failure(BitsoError.canNotReadError)
     }
+    return .failure(BitsoError.canNotReadError)
 }

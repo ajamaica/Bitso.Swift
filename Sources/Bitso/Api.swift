@@ -47,17 +47,26 @@ extension BitsoAPICall {
 }
 
 public struct BitsoEndPoint: EndPointType {
+    private var bitsoKey: BitsoKey
+    private var bitsoSecret: BitsoSecret
     private let enviroment: BitsoNetworkEnvironment
     private let apiCall: BitsoAPICall
-    init(enviroment: BitsoNetworkEnvironment, apiCall: BitsoAPICall) {
+
+    init(enviroment: BitsoNetworkEnvironment, key: BitsoKey, secret: BitsoSecret, apiCall: BitsoAPICall) {
         self.enviroment = enviroment
         self.apiCall = apiCall
+        self.bitsoKey = key
+        self.bitsoSecret = secret
     }
-
+    var key: Key {
+        return bitsoKey
+    }
+    var secret: BitsoKey {
+        return bitsoSecret
+    }
     var baseURL: URL {
         return enviroment.getEnviromentURL()
     }
-
     var task: HTTPTask {
         switch apiCall {
         case .available_books:
@@ -92,9 +101,11 @@ public struct BitsoEndPoint: EndPointType {
             return "trades"
         }
     }
+
     var httpMethod: HTTPMethod {
         return .get
     }
+
     var headers: HTTPHeaders? {
         return nil
     }

@@ -2,7 +2,8 @@ import XCTest
 @testable import Bitso
 
 class BitsoTests: XCTestCase {
-    
+    let key = ""
+    let secret = ""
     fileprivate func getDencoder() -> JSONDecoder{
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .custom(BitsoDateDecodingStrategy.decode)
@@ -18,7 +19,7 @@ class BitsoTests: XCTestCase {
         let orderBook = try! getDencoder().decode(BitsoResponse<OrderBook>.self, from: json)
         session.data = json
         let router = Router<BitsoEndPoint>(session:session)
-        let bitso = Bitso(router: router, environment: .developV3)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.orderBookFor(bookID: "btc_mxn") { (result) in
             debugPrint(result)
             if case let .success(orderbook) = result {
@@ -38,7 +39,7 @@ class BitsoTests: XCTestCase {
         let orderBook = try! getDencoder().decode(BitsoResponse<OrderBook>.self, from: json)
         session.data = json
         let router = Router<BitsoEndPoint>(session:session)
-        let bitso = Bitso(router: router, environment: .developV3)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.orderBookFor(bookID: "btc_mxn") { (result) in
             debugPrint(result)
             if case let .success(orderbook) = result {
@@ -58,7 +59,7 @@ class BitsoTests: XCTestCase {
         let stubTick = try! getDencoder().decode(BitsoResponse<Ticker>.self, from: json)
         session.data = json
         let router = Router<BitsoEndPoint>(session:session)
-        let bitso = Bitso(router: router, environment: .developV3)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.tickerFor(bookID: "btc_mxn") { (result) in
             debugPrint(result)
             if case let .success(ticker) = result {
@@ -77,7 +78,7 @@ class BitsoTests: XCTestCase {
         session.data = json
         
         let router = Router<BitsoEndPoint>(session:session)
-        let bitso = Bitso(router: router, environment: .developV3)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.available_books { (result) in
             if case let .success(book) = result {
                 XCTAssertEqual(book, stubBook.payload)
@@ -95,7 +96,7 @@ class BitsoTests: XCTestCase {
         session.data = json
         
         let router = Router<BitsoEndPoint>(session:session)
-        let bitso = Bitso(router: router, environment: .developV3)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
         bitso.tradesFor(bookID: "btc_mxn", marker: nil, sort: nil, limit: nil) { (result) in
             if case let .success(trades) = result {
                 XCTAssertEqual(trades, stubTrades.payload)
@@ -105,10 +106,28 @@ class BitsoTests: XCTestCase {
         wait(for: [expectation], timeout: 0.1)
     }
     
+    func test_bitso_error() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let session = URLSessionMock()
+        let json = stubbedResponse("error")
+        let stubError = try! getDencoder().decode(BitsoResponse<String>.self, from: json)
+        session.data = json
+        
+        let router = Router<BitsoEndPoint>(session:session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.available_books { (result) in
+            if case let .failure(error) = result {
+                XCTAssertEqual(error, stubError.error)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
     func test_live_call() throws {
         let expectation = XCTestExpectation(description: "True Network Call")
         let router = Router<BitsoEndPoint>(session:URLSession.shared)
-        let bitso = Bitso(router: router, environment: .developV3)
+        let bitso = Bitso(key: "", secret: "", environment: .developV3, router: router)
         bitso.tradesFor(bookID: "btc_mxn", marker: nil, sort: nil, limit: nil) { (result) in
             switch result {
             case .success(let trades):
@@ -121,24 +140,6 @@ class BitsoTests: XCTestCase {
             }
         }
         wait(for: [expectation], timeout: 5)
-    }
-    
-    func test_bitso_error() throws {
-        let expectation = XCTestExpectation(description: "Fake Network Call")
-        let session = URLSessionMock()
-        let json = stubbedResponse("error")
-        let stubError = try! getDencoder().decode(BitsoResponse<String>.self, from: json)
-        session.data = json
-        
-        let router = Router<BitsoEndPoint>(session:session)
-        let bitso = Bitso(router: router, environment: .developV3)
-        bitso.available_books { (result) in
-            if case let .failure(error) = result {
-                XCTAssertEqual(error, stubError.error)
-                expectation.fulfill()
-            }
-        }
-        wait(for: [expectation], timeout: 0.1)
     }
 }
 
