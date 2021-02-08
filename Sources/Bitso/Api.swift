@@ -18,11 +18,15 @@ public enum SortType: String {
 }
 
 public enum BitsoAPICall {
+    /* Private */
     case available_books
     case ticker(bookID: BookSymbol)
     case order_book(bookID: BookSymbol, aggregate: Bool?)
     case trades(bookID: BookSymbol, marker: Bool?, sort: SortType?, limit: Int?)
+    /* Private */
     case account_status
+    case phone_number(phone_number: String)
+    case phone_verification(verification_code: String)
 }
 
 extension BitsoAPICall {
@@ -44,6 +48,10 @@ extension BitsoAPICall {
             urlParameters.setParameter(key: "limit", value: limit)
         case .account_status:
             break
+        case .phone_number(phone_number: let phone_number):
+            bodyParameters.setParameter(key: phone_number, value: phone_number)
+        case .phone_verification(verification_code: let verification_code):
+            bodyParameters.setParameter(key: verification_code, value: verification_code)
         }
         return (bodyParameters, urlParameters)
     }
@@ -91,6 +99,16 @@ public struct BitsoEndPoint: EndPointType {
                 urlParameters: apiCall.parameters().urlParameters)
         case .account_status:
             return .request
+        case .phone_number:
+            return .requestParameters(
+                bodyParameters: apiCall.parameters().bodyParameters,
+                bodyEncoding: .urlEncoding,
+                urlParameters: nil)
+        case .phone_verification:
+            return .requestParameters(
+                bodyParameters: apiCall.parameters().bodyParameters,
+                bodyEncoding: .urlEncoding,
+                urlParameters: nil)
         }
     }
 
@@ -106,6 +124,10 @@ public struct BitsoEndPoint: EndPointType {
             return "trades"
         case .account_status:
             return "account_status"
+        case .phone_number:
+            return "phone_number"
+        case .phone_verification:
+            return "phone_verification"
         }
     }
 
@@ -121,6 +143,10 @@ public struct BitsoEndPoint: EndPointType {
             return .get
         case .account_status:
             return .get
+        case .phone_number:
+            return .post
+        case .phone_verification:
+            return .post
         }
     }
 

@@ -62,6 +62,20 @@ public class Bitso {
         request(apiCall: .account_status, completion: completion)
     }
 
+    /*
+     This endpoint is used to register Mobile phone number for verification.
+     */
+    func phoneNumber(phone_number: String, completion: @escaping (Result<Phone, BitsoError>) -> Void ) {
+        request(apiCall: .phone_number(phone_number: phone_number), completion: completion)
+    }
+
+    /*
+     This endpoint is used to verify a registered mobile phone number
+     */
+    func phoneVerification(verification_code: String, completion: @escaping (Result<Phone, BitsoError>) -> Void ) {
+        request(apiCall: .phone_verification(verification_code: verification_code), completion: completion)
+    }
+
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,
                                              completion: @escaping (Result<Payload, BitsoError>) -> Void ) {
         router.request(.init(
