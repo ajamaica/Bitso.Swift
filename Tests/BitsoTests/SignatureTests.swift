@@ -62,7 +62,7 @@ class SignatureTests: XCTestCase {
         var jsonPayload = Parameters()
         jsonPayload.setParameter(key: "key", value: "value")
         
-        let auth_header = signing(key: key, secret: secret, httpMethod: httpMethod, requestPath: requestPath, parameters: jsonPayload)
+        let auth_header = bitsoSigning(key: key, secret: secret, httpMethod: httpMethod, requestPath: requestPath, parameters: jsonPayload, nonce: "1612699412")
         XCTAssertEqual(expectedResult, auth_header)
     }
 }

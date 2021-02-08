@@ -8,12 +8,26 @@
 import Foundation
 import CommonCrypto
 
-func signing(key: String, secret: String, httpMethod: HTTPMethod, requestPath: String, parameters: Parameters) -> String {
+/**
+ *  Creates a custom signing header for bitso using a HMAC with SHA256. The signature is generated
+ *   by creating a SHA256 HMAC using the Bitso API Secret on the concatenation of nonce + HTTP method
+ *   + requestPath + JSON payload (no ’+’ signs in the concatenated string) and hex encode the output.
+ *   The nonce value should be the same as the nonce field in the Authorization header. The requestPath
+ *   and JSON payload must, of course, be exactly as the ones used in the request.
+ */
+func bitsoSigning(key: String,
+                  secret: String,
+                  httpMethod: HTTPMethod,
+                  requestPath: String,
+                  parameters: Parameters,
+                  nonce: String = "\(Date().timeIntervalSince1970)"
+) -> String {
     var jsonString = ""
-    if !parameters.keys.isEmpty, let jsonAsData = try? JSONSerialization.data(withJSONObject: parameters, options: .sortedKeys) {
+    if !parameters.keys.isEmpty,
+       let jsonAsData = try? JSONSerialization.data(withJSONObject: parameters, options: .sortedKeys) {
         jsonString = String(data: jsonAsData, encoding: .utf8)!
     }
-    let nonce = "1612699412"
+    let nonce = nonce
     let message = "\(nonce)\(httpMethod.rawValue)\(requestPath)\(jsonString)"
     let signature = message.hmac_256(key: secret)
     let auth_header = "Bitso \(key):\(nonce):\(signature)"
