@@ -76,6 +76,13 @@ public class Bitso {
         request(apiCall: .phone_verification(verification_code: verification_code), completion: completion)
     }
 
+    /*
+     This endpoint returns information concerning the user’s balances for all supported currencies.
+     */
+    func balance(completion: @escaping (Result<Balances, BitsoError>) -> Void ) {
+        request(apiCall: .balance, completion: completion)
+    }
+
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,
                                              completion: @escaping (Result<Payload, BitsoError>) -> Void ) {
         router.request(.init(
