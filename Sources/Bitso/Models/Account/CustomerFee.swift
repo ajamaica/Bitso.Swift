@@ -1,11 +1,11 @@
 import Foundation
 
-struct CustomerFees: Decodable, Equatable {
+public struct CustomerFees: Decodable, Equatable {
     let fees: [CustomerFee]
     let withdrawal_fees: [CurrencyId: String]
 }
 
-struct CustomerFee: Decodable, Equatable {
+public struct CustomerFee: Decodable, Equatable {
     let book: BookSymbol
     let taker_fee_decimal: String
     let taker_fee_percent: String

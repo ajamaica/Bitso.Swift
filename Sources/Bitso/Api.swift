@@ -29,11 +29,17 @@ public enum BitsoAPICall {
     case phone_verification(verification_code: String)
     case balance
     case fees
+
     case ledger(marker: Bool?, sort: SortType?, limit: Int?)
     case ledgerTrades(marker: Bool?, sort: SortType?, limit: Int?)
     case ledgerFees(marker: Bool?, sort: SortType?, limit: Int?)
     case ledgerFundings(marker: Bool?, sort: SortType?, limit: Int?)
     case ledgerWithdrawals(marker: Bool?, sort: SortType?, limit: Int?)
+
+    case withdrawals(wid: WithdrawalId, marker: Bool?, limit: Int?, status: WithdrawalStatus?, method: String?)
+    case withdrawalsForWid(wid: WithdrawalId, marker: Bool?, limit: Int?, status: WithdrawalStatus?, method: String?)
+    case withdrawalsForWids(wids: [WithdrawalId], marker: Bool?, limit: Int?, status: WithdrawalStatus?, method: String?)
+    case withdrawalsForOrigin(origin_ids: [OriginID], marker: Bool?, limit: Int?, status: WithdrawalStatus?, method: String?)
 }
 
 extension BitsoAPICall {
@@ -41,8 +47,7 @@ extension BitsoAPICall {
         var bodyParameters: Parameters = [:]
         var urlParameters: Parameters = [:]
         switch self {
-        case .available_books:
-            break
+        case .available_books: break
         case .ticker(bookID: let bookID):
             urlParameters.setParameter(key: "book", value: bookID)
         case .order_book(bookID: let bookID, aggregate: let aggregate):
@@ -59,18 +64,40 @@ extension BitsoAPICall {
             bodyParameters.setParameter(key: "phone_number", value: phone_number)
         case .phone_verification(let verification_code):
             bodyParameters.setParameter(key: "verification_code", value: verification_code)
-        case .balance:
-            break
-        case .fees:
-            break
+        case .balance: break
+        case .fees: break
         case .ledger(let marker, let sort, let limit),
              .ledgerTrades(let marker, let sort, let limit),
              .ledgerFees(let marker, let sort, let limit),
              .ledgerFundings(let marker, let sort, let limit),
              .ledgerWithdrawals(let marker, let sort, let limit):
-            bodyParameters.setParameter(key: "marker", value: marker)
-            bodyParameters.setParameter(key: "sort", value: sort)
-            bodyParameters.setParameter(key: "limit", value: limit)
+            urlParameters.setParameter(key: "marker", value: marker)
+            urlParameters.setParameter(key: "sort", value: sort)
+            urlParameters.setParameter(key: "limit", value: limit)
+        case .withdrawals(let wid, let marker, let limit, let status, let method):
+            urlParameters.setParameter(key: "marker", value: marker)
+            urlParameters.setParameter(key: "wid", value: wid)
+            urlParameters.setParameter(key: "limit", value: limit)
+            urlParameters.setParameter(key: "status", value: status)
+            urlParameters.setParameter(key: "method", value: method)
+        case .withdrawalsForWid(let wid, let marker, let limit, let status, let method):
+            urlParameters.setParameter(key: "marker", value: marker)
+            urlParameters.setParameter(key: "wid", value: wid)
+            urlParameters.setParameter(key: "limit", value: limit)
+            urlParameters.setParameter(key: "status", value: status)
+            urlParameters.setParameter(key: "method", value: method)
+        case .withdrawalsForWids(let wids, let marker, let limit, let status, let method):
+            urlParameters.setParameter(key: "marker", value: marker)
+            urlParameters.setParameter(key: "wids", value: wids)
+            urlParameters.setParameter(key: "limit", value: limit)
+            urlParameters.setParameter(key: "status", value: status)
+            urlParameters.setParameter(key: "method", value: method)
+        case .withdrawalsForOrigin(let origin_ids, let marker, let limit, let status, let method):
+            urlParameters.setParameter(key: "marker", value: marker)
+            urlParameters.setParameter(key: "origin_ids", value: origin_ids)
+            urlParameters.setParameter(key: "limit", value: limit)
+            urlParameters.setParameter(key: "status", value: status)
+            urlParameters.setParameter(key: "method", value: method)
         }
         return (bodyParameters, urlParameters)
     }
@@ -137,6 +164,11 @@ public struct BitsoEndPoint: EndPointType {
                 bodyParameters: nil,
                 bodyEncoding: .urlEncoding,
                 urlParameters: apiCall.parameters().urlParameters)
+        case .withdrawals, .withdrawalsForWid, .withdrawalsForWids, .withdrawalsForOrigin:
+            return .requestParameters(
+                bodyParameters: nil,
+                bodyEncoding: .urlEncoding,
+                urlParameters: apiCall.parameters().urlParameters)
         }
     }
 
@@ -170,6 +202,10 @@ public struct BitsoEndPoint: EndPointType {
             return "ledger/fundings"
         case .ledgerWithdrawals:
             return "ledger/withdrawals"
+        case .withdrawals:
+            return "withdrawals"
+        case .withdrawalsForWid, .withdrawalsForWids, .withdrawalsForOrigin:
+            return "withdrawals/wid"
         }
     }
 
@@ -194,6 +230,8 @@ public struct BitsoEndPoint: EndPointType {
         case .fees:
             return .get
         case .ledger, .ledgerTrades, .ledgerFees, .ledgerFundings, .ledgerWithdrawals:
+            return .get
+        case .withdrawals, .withdrawalsForWid, .withdrawalsForWids, .withdrawalsForOrigin:
             return .get
         }
     }
