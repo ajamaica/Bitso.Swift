@@ -174,6 +174,74 @@ class BitsoTests: XCTestCase {
         wait(for: [expectation], timeout: 0.1)
     }
     
+    func test_ledger() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let session = URLSessionMock()
+        let json = stubbedResponse("ledger")
+        let stub = try! getDencoder().decode(BitsoResponse<[Ledger]>.self, from: json)
+        session.data = json
+        let router = Router<BitsoEndPoint>(session:session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.ledger(marker: nil, sort: nil, limit: nil) { (result) in
+            if case let .success(ledger) = result {
+                XCTAssertEqual(ledger, stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
+    func test_ledger_tades() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let session = URLSessionMock()
+        let json = stubbedResponse("ledger")
+        let stub = try! getDencoder().decode(BitsoResponse<[Ledger]>.self, from: json)
+        session.data = json
+        let router = Router<BitsoEndPoint>(session:session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.ledgerTrades(marker: nil, sort: nil, limit: nil) { (result) in
+            if case let .success(ledger) = result {
+                XCTAssertEqual(ledger, stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
+    func test_ledger_fees() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let session = URLSessionMock()
+        let json = stubbedResponse("ledger")
+        let stub = try! getDencoder().decode(BitsoResponse<[Ledger]>.self, from: json)
+        session.data = json
+        let router = Router<BitsoEndPoint>(session:session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.ledgerFees(marker: nil, sort: nil, limit: nil) { (result) in
+            if case let .success(ledger) = result {
+                XCTAssertEqual(ledger, stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
+    func test_ledger_withdrawals() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let session = URLSessionMock()
+        let json = stubbedResponse("ledger")
+        let stub = try! getDencoder().decode(BitsoResponse<[Ledger]>.self, from: json)
+        session.data = json
+        let router = Router<BitsoEndPoint>(session:session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.ledgerWithdrawals(marker: nil, sort: nil, limit: nil) { (result) in
+            if case let .success(ledger) = result {
+                XCTAssertEqual(ledger, stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
     func test_bitso_error() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
         let session = URLSessionMock()

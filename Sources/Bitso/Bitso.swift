@@ -83,6 +83,41 @@ public class Bitso {
         request(apiCall: .balance, completion: completion)
     }
 
+    func ledger(marker: Bool?,
+                sort: SortType?,
+                limit: Int?,
+                completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
+        request(apiCall: .ledger(marker: marker, sort: sort, limit: limit), completion: completion)
+    }
+
+    func ledgerTrades(marker: Bool?,
+                sort: SortType?,
+                limit: Int?,
+                completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
+        request(apiCall: .ledgerTrades(marker: marker, sort: sort, limit: limit), completion: completion)
+    }
+
+    func ledgerFees(marker: Bool?,
+                sort: SortType?,
+                limit: Int?,
+                completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
+        request(apiCall: .ledgerFees(marker: marker, sort: sort, limit: limit), completion: completion)
+    }
+
+    func ledgerFundings(marker: Bool?,
+                sort: SortType?,
+                limit: Int?,
+                completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
+        request(apiCall: .ledgerFundings(marker: marker, sort: sort, limit: limit), completion: completion)
+    }
+
+    func ledgerWithdrawals(marker: Bool?,
+                sort: SortType?,
+                limit: Int?,
+                completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
+        request(apiCall: .ledgerWithdrawals(marker: marker, sort: sort, limit: limit), completion: completion)
+    }
+
     /*
      This endpoint returns information on customer fees for all
      available order books, and withdrawal fees for applicable currencies.

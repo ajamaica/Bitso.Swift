@@ -29,6 +29,11 @@ public enum BitsoAPICall {
     case phone_verification(verification_code: String)
     case balance
     case fees
+    case ledger(marker: Bool?, sort: SortType?, limit: Int?)
+    case ledgerTrades(marker: Bool?, sort: SortType?, limit: Int?)
+    case ledgerFees(marker: Bool?, sort: SortType?, limit: Int?)
+    case ledgerFundings(marker: Bool?, sort: SortType?, limit: Int?)
+    case ledgerWithdrawals(marker: Bool?, sort: SortType?, limit: Int?)
 }
 
 extension BitsoAPICall {
@@ -50,14 +55,22 @@ extension BitsoAPICall {
             urlParameters.setParameter(key: "limit", value: limit)
         case .account_status:
             break
-        case .phone_number(phone_number: let phone_number):
-            bodyParameters.setParameter(key: phone_number, value: phone_number)
-        case .phone_verification(verification_code: let verification_code):
-            bodyParameters.setParameter(key: verification_code, value: verification_code)
+        case .phone_number(let phone_number):
+            bodyParameters.setParameter(key: "phone_number", value: phone_number)
+        case .phone_verification(let verification_code):
+            bodyParameters.setParameter(key: "verification_code", value: verification_code)
         case .balance:
             break
         case .fees:
             break
+        case .ledger(let marker, let sort, let limit),
+             .ledgerTrades(let marker, let sort, let limit),
+             .ledgerFees(let marker, let sort, let limit),
+             .ledgerFundings(let marker, let sort, let limit),
+             .ledgerWithdrawals(let marker, let sort, let limit):
+            bodyParameters.setParameter(key: "marker", value: marker)
+            bodyParameters.setParameter(key: "sort", value: sort)
+            bodyParameters.setParameter(key: "limit", value: limit)
         }
         return (bodyParameters, urlParameters)
     }
@@ -119,6 +132,11 @@ public struct BitsoEndPoint: EndPointType {
             return .request
         case .fees:
             return .request
+        case .ledger, .ledgerTrades, .ledgerFees, .ledgerFundings, .ledgerWithdrawals:
+            return .requestParameters(
+                bodyParameters: nil,
+                bodyEncoding: .urlEncoding,
+                urlParameters: apiCall.parameters().urlParameters)
         }
     }
 
@@ -142,6 +160,16 @@ public struct BitsoEndPoint: EndPointType {
             return "balance"
         case .fees:
             return "fees"
+        case .ledger:
+            return "ledger"
+        case .ledgerTrades:
+            return "ledger/trades"
+        case .ledgerFees:
+            return "ledger/fees"
+        case .ledgerFundings:
+            return "ledger/fundings"
+        case .ledgerWithdrawals:
+            return "ledger/withdrawals"
         }
     }
 
@@ -164,6 +192,8 @@ public struct BitsoEndPoint: EndPointType {
         case .balance:
             return .get
         case .fees:
+            return .get
+        case .ledger, .ledgerTrades, .ledgerFees, .ledgerFundings, .ledgerWithdrawals:
             return .get
         }
     }
