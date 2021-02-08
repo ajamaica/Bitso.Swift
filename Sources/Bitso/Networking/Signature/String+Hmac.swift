@@ -15,15 +15,16 @@ import CommonCrypto
  *   The nonce value should be the same as the nonce field in the Authorization header. The requestPath
  *   and JSON payload must, of course, be exactly as the ones used in the request.
  */
-func bitsoSigning(key: String,
-                  secret: String,
+func bitsoSigning(key: BitsoKey,
+                  secret: BitsoSecret,
                   httpMethod: HTTPMethod,
                   requestPath: String,
-                  parameters: Parameters,
+                  parameters: Parameters?,
                   nonce: String = "\(Date().timeIntervalSince1970)"
-) -> String {
+) -> HTTPHeaders {
     var jsonString = ""
-    if !parameters.keys.isEmpty,
+    if let parameters = parameters,
+       !parameters.keys.isEmpty,
        let jsonAsData = try? JSONSerialization.data(withJSONObject: parameters, options: .sortedKeys) {
         jsonString = String(data: jsonAsData, encoding: .utf8)!
     }
@@ -31,7 +32,7 @@ func bitsoSigning(key: String,
     let message = "\(nonce)\(httpMethod.rawValue)\(requestPath)\(jsonString)"
     let signature = message.hmac_256(key: secret)
     let auth_header = "Bitso \(key):\(nonce):\(signature)"
-    return auth_header
+    return ["Authorization": auth_header]
 }
 
 public extension String {

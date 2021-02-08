@@ -6,6 +6,8 @@ public typealias BitsoSecret = String
 public class Bitso {
     private let environment: BitsoNetworkEnvironment
     private let router: Router<BitsoEndPoint>
+    private let key: BitsoKey
+    private let secret: BitsoSecret
 
     init(key: BitsoKey,
          secret: BitsoSecret,
@@ -14,6 +16,8 @@ public class Bitso {
     ) {
         self.router = router
         self.environment = environment
+        self.key = key
+        self.secret = secret
     }
 
     /**
@@ -52,7 +56,12 @@ public class Bitso {
 
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,
                                              completion: @escaping (Result<Payload, BitsoError>) -> Void ) {
-        router.request(.init(enviroment: environment, apiCall: apiCall)) { ( data, response, error) in
+        router.request(.init(
+                        enviroment: environment,
+                        key: key,
+                        secret: secret,
+                        apiCall: apiCall)
+        ) { ( data, response, error) in
             guard let response = response as? HTTPURLResponse else {
                 return completion(.failure(BitsoError.canNotReadError))
             }

@@ -54,7 +54,7 @@ class SignatureTests: XCTestCase {
     }
     
     func test_signature_header2() {
-        let expectedResult = "Bitso BITSO_KEY:1612699412:c9f81ad14895f7b290ccdae5a8dc2d6471f9eec117485345b70e34fe93c3b30f"
+        let expectedResult = ["Authorization" : "Bitso BITSO_KEY:1612699412:c9f81ad14895f7b290ccdae5a8dc2d6471f9eec117485345b70e34fe93c3b30f"]
         let key = "BITSO_KEY"
         let secret = "BITSO_SECRET"
         let httpMethod = HTTPMethod.get

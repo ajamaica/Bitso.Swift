@@ -47,11 +47,16 @@ extension BitsoAPICall {
 }
 
 public struct BitsoEndPoint: EndPointType {
+    private let key: BitsoKey
+    private let secret: BitsoSecret
     private let enviroment: BitsoNetworkEnvironment
     private let apiCall: BitsoAPICall
-    init(enviroment: BitsoNetworkEnvironment, apiCall: BitsoAPICall) {
+
+    init(enviroment: BitsoNetworkEnvironment, key: BitsoKey, secret: BitsoSecret, apiCall: BitsoAPICall) {
         self.enviroment = enviroment
         self.apiCall = apiCall
+        self.key = key
+        self.secret = secret
     }
 
     var baseURL: URL {
