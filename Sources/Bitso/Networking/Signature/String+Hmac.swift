@@ -10,8 +10,7 @@ import CommonCrypto
 
 func signing(key: String, secret: String, httpMethod: HTTPMethod, requestPath: String, parameters: Parameters) -> String {
     var jsonString = ""
-    if !parameters.keys.isEmpty {
-        let jsonAsData = try! JSONSerialization.data(withJSONObject: parameters, options: .sortedKeys)
+    if !parameters.keys.isEmpty, let jsonAsData = try? JSONSerialization.data(withJSONObject: parameters, options: .sortedKeys) {
         jsonString = String(data: jsonAsData, encoding: .utf8)!
     }
     let nonce = "1612699412"

@@ -7,7 +7,11 @@ public class Bitso {
     private let environment: BitsoNetworkEnvironment
     private let router: Router<BitsoEndPoint>
 
-    init(key: BitsoKey, secret: BitsoSecret, environment: BitsoNetworkEnvironment, router: Router<BitsoEndPoint> = Router<BitsoEndPoint>(session: URLSession.shared)) {
+    init(key: BitsoKey,
+         secret: BitsoSecret,
+         environment: BitsoNetworkEnvironment,
+         router: Router<BitsoEndPoint> = Router<BitsoEndPoint>(session: URLSession.shared)
+    ) {
         self.router = router
         self.environment = environment
     }
