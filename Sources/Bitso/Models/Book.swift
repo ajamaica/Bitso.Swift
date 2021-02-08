@@ -16,4 +16,6 @@ public struct Book: Decodable, Equatable {
     let maximum_price: String
     let minimum_value: String
     let maximum_value: String
+    let tick_size: String?
+    let fees: Fees
 }
