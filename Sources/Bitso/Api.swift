@@ -22,6 +22,7 @@ public enum BitsoAPICall {
     case ticker(bookID: BookSymbol)
     case order_book(bookID: BookSymbol, aggregate: Bool?)
     case trades(bookID: BookSymbol, marker: Bool?, sort: SortType?, limit: Int?)
+    case account_status
 }
 
 extension BitsoAPICall {
@@ -41,6 +42,8 @@ extension BitsoAPICall {
             urlParameters.setParameter(key: "marker", value: marker)
             urlParameters.setParameter(key: "sort", value: sort)
             urlParameters.setParameter(key: "limit", value: limit)
+        case .account_status:
+            break
         }
         return (bodyParameters, urlParameters)
     }
@@ -86,6 +89,8 @@ public struct BitsoEndPoint: EndPointType {
                 bodyParameters: nil,
                 bodyEncoding: .urlEncoding,
                 urlParameters: apiCall.parameters().urlParameters)
+        case .account_status:
+            return .request
         }
     }
 
@@ -99,11 +104,24 @@ public struct BitsoEndPoint: EndPointType {
             return "order_book"
         case .trades:
             return "trades"
+        case .account_status:
+            return "account_status"
         }
     }
 
     var httpMethod: HTTPMethod {
-        return .get
+        switch apiCall {
+        case .available_books:
+            return .get
+        case .ticker:
+            return .get
+        case .order_book:
+            return .get
+        case .trades:
+            return .get
+        case .account_status:
+            return .get
+        }
     }
 
     var headers: HTTPHeaders? {
