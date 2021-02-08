@@ -16,5 +16,8 @@ jobs:
     - name: Build
       run: swift build -v
     - name: Run tests
-      run: swift test -v
+      run: swift test -v --enable-test-discovery --enable-code-coverage
+    - name: swift-codecov
+      uses: mattpolzin/swift-codecov-action@0.5.0
+
       
