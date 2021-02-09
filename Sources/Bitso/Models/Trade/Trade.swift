@@ -7,12 +7,16 @@
 
 import Foundation
 
+public enum Side: String, Decodable {
+    case sell
+    case buy
+}
 public typealias TradeID = Int
-struct Trade: Codable, Equatable {
+public struct Trade: Decodable, Equatable {
     let book: BookSymbol
     let created_at: Date
     let amount: String
-    let maker_side: String
+    let maker_side: Side
     let price: String
     let tid: TradeID
 }
