@@ -30,20 +30,24 @@ public enum BitsoAPICall {
     case balance
     case fees
 
-    case ledger(marker: Bool?, sort: SortType?, limit: Int?)
-    case ledgerTrades(marker: Bool?, sort: SortType?, limit: Int?)
-    case ledgerFees(marker: Bool?, sort: SortType?, limit: Int?)
-    case ledgerFundings(marker: Bool?, sort: SortType?, limit: Int?)
-    case ledgerWithdrawals(marker: Bool?, sort: SortType?, limit: Int?)
+    case ledger(marker: String?, sort: SortType?, limit: Int?)
+    case ledgerTrades(marker: String?, sort: SortType?, limit: Int?)
+    case ledgerFees(marker: String?, sort: SortType?, limit: Int?)
+    case ledgerFundings(marker: String?, sort: SortType?, limit: Int?)
+    case ledgerWithdrawals(marker: String?, sort: SortType?, limit: Int?)
 
-    case withdrawals(wid: WithdrawalId, marker: Bool?, limit: Int?, status: Status?, method: String?)
-    case withdrawalsForWid(wid: WithdrawalId, marker: Bool?, limit: Int?, status: Status?, method: String?)
-    case withdrawalsForWids(wids: [WithdrawalId], marker: Bool?, limit: Int?, status: Status?, method: String?)
-    case withdrawalsForOrigin(origin_ids: [OriginID], marker: Bool?, limit: Int?, status: Status?, method: String?)
+    case withdrawals(wid: WithdrawalId, marker: String?, limit: Int?, status: Status?, method: String?)
+    case withdrawalsForWid(wid: WithdrawalId, marker: String?, limit: Int?, status: Status?, method: String?)
+    case withdrawalsForWids(wids: [WithdrawalId], marker: String?, limit: Int?, status: Status?, method: String?)
+    case withdrawalsForOrigin(origin_ids: [OriginID], marker: String?, limit: Int?, status: Status?, method: String?)
 
-    case fundings(marker: Bool?, limit: Int?, status: Status?, method: String?, txids: [String]?)
-    case fundingsTid(marker: Bool?, limit: Int?, status: Status?, method: String?, txids: [String]?)
-    case fundingsTidTidTid(marker: Bool?, limit: Int?, status: Status?, method: String?, txids: [String]?)
+    case fundings(marker: String?, limit: Int?, status: Status?, method: String?, txids: [String]?)
+    case fundingsTid(marker: String?, limit: Int?, status: Status?, method: String?, txids: [String]?)
+    case fundingsTidTidTid(marker: String?, limit: Int?, status: Status?, method: String?, txids: [String]?)
+
+    case userTrades(book: BookSymbol, sort: SortType?, limit: Int?, marker: String?)
+    case userTradesTid(book: BookSymbol, sort: SortType?, limit: Int?, marker: String?)
+    case userTradesTidTidTid(book: BookSymbol, sort: SortType?, limit: Int?, marker: String?)
 }
 
 extension BitsoAPICall {
@@ -114,6 +118,13 @@ extension BitsoAPICall {
                 urlParameters.setParameter(key: "status", value: status)
                 urlParameters.setParameter(key: "method", value: method)
                 urlParameters.setParameter(key: "txids", value: txids?.joined(separator: ","))
+        case .userTrades(let book, let sort, let limit, let marker),
+             .userTradesTid(let book, let sort, let limit, let marker),
+             .userTradesTidTidTid(let book, let sort, let limit, let marker):
+            urlParameters.setParameter(key: "book", value: book)
+            urlParameters.setParameter(key: "sort", value: sort)
+            urlParameters.setParameter(key: "limit", value: limit)
+            urlParameters.setParameter(key: "marker", value: marker)
         default: break
         }
         return urlParameters
@@ -191,6 +202,11 @@ public struct BitsoEndPoint: EndPointType {
                 bodyParameters: nil,
                 bodyEncoding: .urlEncoding,
                 urlParameters: apiCall.urlParameters)
+        case .userTrades, .userTradesTid, .userTradesTidTidTid:
+            return .requestParameters(
+                bodyParameters: nil,
+                bodyEncoding: .urlEncoding,
+                urlParameters: apiCall.urlParameters)
         }
     }
 
@@ -234,6 +250,12 @@ public struct BitsoEndPoint: EndPointType {
             return "fundings/fid"
         case .fundingsTidTidTid:
             return "fundings/fid-fid-fid"
+        case .userTrades:
+            return "user_trades"
+        case .userTradesTid:
+            return "user_trades/tid"
+        case .userTradesTidTidTid:
+            return "user_trades/tid-tid-tid"
         }
     }
 
@@ -262,6 +284,8 @@ public struct BitsoEndPoint: EndPointType {
         case .withdrawals, .withdrawalsForWid, .withdrawalsForWids, .withdrawalsForOrigin:
             return .get
         case .fundings, .fundingsTid, .fundingsTidTidTid:
+            return .get
+        case .userTrades, .userTradesTid, .userTradesTidTidTid:
             return .get
         }
     }

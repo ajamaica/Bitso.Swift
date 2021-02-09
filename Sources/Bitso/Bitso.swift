@@ -86,7 +86,7 @@ public class Bitso {
     /**
      Returns a list of all the user’s registered operations.
      */
-    func ledger(marker: Bool?,
+    func ledger(marker: String?,
                 sort: SortType?,
                 limit: Int?,
                 completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
@@ -96,7 +96,7 @@ public class Bitso {
     /**
      Returns a list of all the user’s registered operations.
      */
-    func ledgerTrades(marker: Bool?,
+    func ledgerTrades(marker: String?,
                       sort: SortType?,
                       limit: Int?,
                       completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
@@ -106,7 +106,7 @@ public class Bitso {
     /**
      Returns a list of all the user’s registered operations.
      */
-    func ledgerFees(marker: Bool?,
+    func ledgerFees(marker: String?,
                     sort: SortType?,
                     limit: Int?,
                     completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
@@ -116,7 +116,7 @@ public class Bitso {
     /**
      Returns a list of all the user’s registered operations.
      */
-    func ledgerFundings(marker: Bool?,
+    func ledgerFundings(marker: String?,
                         sort: SortType?,
                         limit: Int?,
                         completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
@@ -126,7 +126,7 @@ public class Bitso {
     /**
      Returns a list of all the user’s registered operations.
      */
-    func ledgerWithdrawals(marker: Bool?,
+    func ledgerWithdrawals(marker: String?,
                            sort: SortType?,
                            limit: Int?,
                            completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
@@ -145,7 +145,7 @@ public class Bitso {
      Returns detailed info on a user’s fund withdrawals.
      */
     func withdrawals(wid: WithdrawalId,
-                     marker: Bool?,
+                     marker: String?,
                      limit: Int?,
                      status: Status?,
                      method: String?,
@@ -162,7 +162,7 @@ public class Bitso {
      Returns detailed info on a user’s fund withdrawals.
      */
     func withdrawalsForWid(wid: WithdrawalId,
-                           marker: Bool?,
+                           marker: String?,
                            limit: Int?,
                            status: Status?,
                            method: String?,
@@ -179,7 +179,7 @@ public class Bitso {
      Returns detailed info on a user’s fund withdrawals.
      */
     func withdrawalsForWids(wids: [WithdrawalId],
-                            marker: Bool?,
+                            marker: String?,
                             limit: Int?,
                             status: Status?,
                             method: String?,
@@ -196,7 +196,7 @@ public class Bitso {
      Returns detailed info on a user’s fund withdrawals.
      */
     func withdrawalsForOrigin(origin_ids: [OriginID],
-                              marker: Bool?,
+                              marker: String?,
                               limit: Int?,
                               status: Status?,
                               method: String?,
@@ -219,7 +219,7 @@ public class Bitso {
     /**
      Returns detailed info on a user’s fundings.
      */
-    func fundings(marker: Bool?,
+    func fundings(marker: String?,
                   limit: Int?,
                   status: Status?,
                   method: String?,
@@ -230,7 +230,7 @@ public class Bitso {
     /**
      Returns detailed info on a user’s fundings.
      */
-    func fundingsTid(marker: Bool?,
+    func fundingsTid(marker: String?,
                      limit: Int?,
                      status: Status?,
                      method: String?,
@@ -249,7 +249,7 @@ public class Bitso {
     /**
      Returns detailed info on a user’s fundings.
      */
-    func fundingsTidTidTid(marker: Bool?,
+    func fundingsTidTidTid(marker: String?,
                            limit: Int?,
                            status: Status?,
                            method: String?,
@@ -269,6 +269,42 @@ public class Bitso {
                            completion: @escaping (Result<[Funding], BitsoError>) -> Void
     ) {
         request(apiCall: .fundingsTidTidTid(marker: nil, limit: nil, status: nil, method: nil, txids: txids), completion: completion)
+    }
+
+    /**
+     This endpoint returns a list of the user’s trades.
+     */
+    func userTrades(book: BookSymbol,
+                    sort: SortType?,
+                    limit: Int?,
+                    marker: String?,
+                    completion: @escaping (Result<[UserTrade], BitsoError>) -> Void
+    ) {
+        request(apiCall: .userTrades(book: book, sort: sort, limit: limit, marker: marker), completion: completion)
+    }
+
+    /**
+     This endpoint returns a list of the user’s trades.
+     */
+    func userTradesTid(book: BookSymbol,
+                    sort: SortType?,
+                    limit: Int?,
+                    marker: String?,
+                    completion: @escaping (Result<[UserTrade], BitsoError>) -> Void
+    ) {
+        request(apiCall: .userTradesTid(book: book, sort: sort, limit: limit, marker: marker), completion: completion)
+    }
+
+    /**
+     This endpoint returns a list of the user’s trades.
+     */
+    func userTradesTidTidTid(book: BookSymbol,
+                    sort: SortType?,
+                    limit: Int?,
+                    marker: String?,
+                    completion: @escaping (Result<[UserTrade], BitsoError>) -> Void
+    ) {
+        request(apiCall: .userTradesTidTidTid(book: book, sort: sort, limit: limit, marker: marker), completion: completion)
     }
 
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,
