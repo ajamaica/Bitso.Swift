@@ -20,11 +20,12 @@ func bitsoSigning(key: BitsoKey,
                   httpMethod: HTTPMethod,
                   requestPath: String,
                   parameters: Data?,
-                  nonce: String = "\(Date().timeIntervalSince1970)"
+                  nonce: String
 ) -> HTTPHeaders {
     var jsonString = ""
-    if let parameters = parameters {
-        jsonString = String(data: parameters, encoding: .utf8)!
+    if httpMethod == .post,
+        let parameters = parameters {
+        jsonString = String(data: parameters, encoding: .utf8)!.replaceColon()
     }
     let nonce = nonce
     let message = "\(nonce)\(httpMethod.rawValue)\(requestPath)\(jsonString)"
@@ -41,3 +42,13 @@ public extension String {
         return data.map { String(format: "%02hhx", $0) }.joined()
     }
 }
+
+public extension String {
+   func replace(string: String, replacement: String) -> String {
+       return self.replacingOccurrences(of: string, with: replacement, options: NSString.CompareOptions.literal, range: nil)
+   }
+
+   func replaceColon() -> String {
+       return self.replace(string: ":", replacement: ": ")
+   }
+ }
