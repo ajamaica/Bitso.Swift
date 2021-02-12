@@ -48,6 +48,8 @@ public enum BitsoAPICall {
     case userTrades(book: BookSymbol, sort: SortType?, limit: Int?, marker: String?)
     case userTradesTid(book: BookSymbol, sort: SortType?, limit: Int?, marker: String?)
     case userTradesTidTidTid(book: BookSymbol, sort: SortType?, limit: Int?, marker: String?)
+    case orderTrades(oid: String)
+    case orderTradesWithorigin(origin_id: String)
 }
 
 extension BitsoAPICall {
@@ -125,6 +127,8 @@ extension BitsoAPICall {
             urlParameters.setParameter(key: "sort", value: sort)
             urlParameters.setParameter(key: "limit", value: limit)
             urlParameters.setParameter(key: "marker", value: marker)
+        case .orderTradesWithorigin(let origin_id):
+            urlParameters.setParameter(key: "origin_id", value: origin_id)
         default: break
         }
         return urlParameters
@@ -207,6 +211,13 @@ public struct BitsoEndPoint: EndPointType {
                 bodyParameters: nil,
                 bodyEncoding: .urlEncoding,
                 urlParameters: apiCall.urlParameters)
+        case .orderTrades:
+            return .request
+        case .orderTradesWithorigin:
+            return .requestParameters(
+                bodyParameters: nil,
+                bodyEncoding: .urlEncoding,
+                urlParameters: apiCall.urlParameters)
         }
     }
 
@@ -256,6 +267,10 @@ public struct BitsoEndPoint: EndPointType {
             return "user_trades/tid"
         case .userTradesTidTidTid:
             return "user_trades/tid-tid-tid"
+        case .orderTrades(let oid):
+            return "order_trades/\(oid)"
+        case .orderTradesWithorigin:
+            return "order_trades"
         }
     }
 
@@ -286,6 +301,10 @@ public struct BitsoEndPoint: EndPointType {
         case .fundings, .fundingsTid, .fundingsTidTidTid:
             return .get
         case .userTrades, .userTradesTid, .userTradesTidTidTid:
+            return .get
+        case .orderTrades:
+            return .get
+        case .orderTradesWithorigin:
             return .get
         }
     }
