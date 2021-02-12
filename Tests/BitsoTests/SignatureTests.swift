@@ -18,35 +18,38 @@ class SignatureTests: XCTestCase {
     }
 
     func test_signature_header() {
-        let expectedResult = "Bitso BITSO_KEY:1612699412:c9f81ad14895f7b290ccdae5a8dc2d6471f9eec117485345b70e34fe93c3b30f"
+        let expectedResult = "Bitso BITSO_KEY:1613103285919:cf58c0fe049090631614ae7f6a6bc9a2c07aaebba046132556fd1a74321b9cd6"
+        let expectedMessage = "1613103285919POST/v3/balance/{\"key\":\"value\"}"
         let key = "BITSO_KEY"
         let secret = "BITSO_SECRET"
-        let httpMethod = HTTPMethod.get.rawValue
+        let httpMethod = HTTPMethod.post.rawValue
         let requestPath = "/v3/balance/"
 
         var jsonPayload = Parameters()
         jsonPayload.setParameter(key: "key", value: "value")
         var jsonString = ""
         if !jsonPayload.keys.isEmpty {
-            let jsonAsData = try! JSONSerialization.data(withJSONObject: jsonPayload, options: .sortedKeys)
+            let jsonAsData = try! JSONSerialization.data(withJSONObject: jsonPayload, options: [.sortedKeys])
             jsonString = String(data: jsonAsData, encoding: .utf8)!
         }
 
-        let nonce = "1612699412"
+        let nonce = "1613103285919"
         let message = "\(nonce)\(httpMethod)\(requestPath)\(jsonString)"
+        
+        XCTAssertEqual(expectedMessage, message)
         let signature = message.hmac_256(key: secret)
         let auth_header = "Bitso \(key):\(nonce):\(signature)"
         XCTAssertEqual(expectedResult, auth_header)
     }
 
     func test_signature_header_no_payload() {
-        let expectedResult = "Bitso BITSO_KEY:1612699412:6fc902116c72596a28c9887f7fbacace307b1f77e244262c2cd7179885f50b40"
+        let expectedResult = "Bitso BITSO_KEY:1613101572573:d41ffae5c1e6d077cec86ea9397f6550889b174847aa6965d6384b661bbeb017"
         let key = "BITSO_KEY"
         let secret = "BITSO_SECRET"
         let httpMethod = HTTPMethod.get.rawValue
         let requestPath = "/v3/balance/"
 
-        let nonce = "1612699412"
+        let nonce = "1613101572573"
         let message = "\(nonce)\(httpMethod)\(requestPath)"
         let signature = message.hmac_256(key: secret)
         let auth_header = "Bitso \(key):\(nonce):\(signature)"
@@ -54,10 +57,10 @@ class SignatureTests: XCTestCase {
     }
 
     func test_signature_header2() {
-        let expectedResult = ["Authorization": "Bitso BITSO_KEY:1612699412:c9f81ad14895f7b290ccdae5a8dc2d6471f9eec117485345b70e34fe93c3b30f"]
+        let expectedResult = ["Authorization": "Bitso BITSO_KEY:1613103285919:cf58c0fe049090631614ae7f6a6bc9a2c07aaebba046132556fd1a74321b9cd6"]
         let key = "BITSO_KEY"
         let secret = "BITSO_SECRET"
-        let httpMethod = HTTPMethod.get
+        let httpMethod = HTTPMethod.post
         let requestPath = "/v3/balance/"
         var jsonPayload = Parameters()
         jsonPayload.setParameter(key: "key", value: "value")
@@ -67,7 +70,8 @@ class SignatureTests: XCTestCase {
                                        httpMethod: httpMethod,
                                        requestPath: requestPath,
                                        parameters: jsonAsData,
-                                       nonce: "1612699412")
+                                       nonce: "1613103285919")
         XCTAssertEqual(expectedResult, auth_header)
     }
 }
+

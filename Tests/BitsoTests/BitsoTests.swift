@@ -336,6 +336,24 @@ class BitsoTests: XCTestCase {
         }
         wait(for: [expectation], timeout: 5)
     }
+    
+    /*func test_live_call_account() throws {
+        let expectation = XCTestExpectation(description: "True Network Call")
+        let router = Router<BitsoEndPoint>(session: URLSession.shared, enableDebugLogs: true)
+        let bitso = Bitso(key: "", secret: "", environment: .productionV3, router: router)
+        bitso.balance { (result) in
+            debugPrint(result)
+            switch result {
+            case .success(let trades):
+                XCTAssertNotNil(trades)
+                expectation.fulfill()
+            case .failure(let error):
+                debugPrint(error)
+                XCTFail()
+                expectation.fulfill()
+            }        }
+        wait(for: [expectation], timeout: 5)
+    }*/
 }
 
 func stubbedResponse(_ filename: String) -> Data {

@@ -92,11 +92,13 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
             }
 
             // Inject the Bitso Authorization Header = Authorization: Authorization Header <key>:<nonce>:<signature>
+            let nonce = "\(Int(Date().timeIntervalSince1970 * 1000))"
             let signingHeader = bitsoSigning(key: route.key,
                                              secret: route.secret,
                                              httpMethod: route.httpMethod,
-                                             requestPath: route.path,
-                                             parameters: request.httpBody)
+                                             requestPath: request.url!.path,
+                                             parameters: request.httpBody,
+                                             nonce: nonce)
             self.addAdditionalHeaders(signingHeader, request: &request)
             return request
         } catch {

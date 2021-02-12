@@ -20,10 +20,11 @@ func bitsoSigning(key: BitsoKey,
                   httpMethod: HTTPMethod,
                   requestPath: String,
                   parameters: Data?,
-                  nonce: String = "\(Date().timeIntervalSince1970)"
+                  nonce: String
 ) -> HTTPHeaders {
     var jsonString = ""
-    if let parameters = parameters {
+    if httpMethod == .post,
+        let parameters = parameters {
         jsonString = String(data: parameters, encoding: .utf8)!
     }
     let nonce = nonce
