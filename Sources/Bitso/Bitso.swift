@@ -307,6 +307,24 @@ public class Bitso {
         request(apiCall: .userTradesTidTidTid(book: book, sort: sort, limit: limit, marker: marker), completion: completion)
     }
 
+    /**
+     This endpoint returns a list of the user’s trades.
+     */
+    func orderTrades(oid: String,
+                    completion: @escaping (Result<[OrderTrade], BitsoError>) -> Void
+    ) {
+        request(apiCall: .orderTrades(oid: oid), completion: completion)
+    }
+
+    /**
+     This endpoint returns a list of the user’s trades.
+     */
+    func orderTradesWithorigin(origin_id: String,
+                    completion: @escaping (Result<[OrderTrade], BitsoError>) -> Void
+    ) {
+        request(apiCall: .orderTradesWithorigin(origin_id: origin_id), completion: completion)
+    }
+
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,
                                              completion: @escaping (Result<Payload, BitsoError>) -> Void ) {
         router.request(.init(
