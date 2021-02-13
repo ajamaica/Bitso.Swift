@@ -332,9 +332,36 @@ public class Bitso {
                      marker: String?,
                      sort: SortType?,
                      limit: Int?,
-                     completion: @escaping (Result<[OpenOrder], BitsoError>) -> Void
+                     completion: @escaping (Result<[Order], BitsoError>) -> Void
     ) {
         request(apiCall: .openOrders(book: book, marker: marker, sort: sort, limit: limit), completion: completion)
+    }
+
+    /**
+     Returns a list of details for 1 or more orders
+     */
+    func orders(oid: String,
+                completion: @escaping (Result<[Order], BitsoError>) -> Void
+    ) {
+        request(apiCall: .orders(oid: oid), completion: completion)
+    }
+
+    /**
+     Returns a list of details for 1 or more orders
+     */
+    func ordersWithOids(oids: [String],
+                completion: @escaping (Result<[Order], BitsoError>) -> Void
+    ) {
+        request(apiCall: .ordersWithOids(oids: oids), completion: completion)
+    }
+
+    /**
+     Returns a list of details for 1 or more orders
+     */
+    func ordersWithOrigin(origin_ids: [String],
+                completion: @escaping (Result<[Order], BitsoError>) -> Void
+    ) {
+        request(apiCall: .ordersWithOrigin(origin_ids: origin_ids), completion: completion)
     }
 
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,

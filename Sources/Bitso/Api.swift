@@ -52,6 +52,10 @@ public enum BitsoAPICall {
     case orderTradesWithorigin(origin_id: String)
 
     case openOrders(book: BookSymbol, marker: String?, sort: SortType?, limit: Int?)
+
+    case orders(oid: String)
+    case ordersWithOids(oids: [String])
+    case ordersWithOrigin(origin_ids: [String])
 }
 
 extension BitsoAPICall {
@@ -136,6 +140,12 @@ extension BitsoAPICall {
             urlParameters.setParameter(key: "marker", value: marker)
             urlParameters.setParameter(key: "limit", value: limit)
             urlParameters.setParameter(key: "sort", value: sort)
+        case .orders(let oid):
+            urlParameters.setParameter(key: "oid", value: oid)
+        case .ordersWithOids(let oids):
+            urlParameters.setParameter(key: "oids", value: oids.joined(separator: ","))
+        case .ordersWithOrigin(let origin_ids):
+            urlParameters.setParameter(key: "origin_ids", value: origin_ids)
         default: break
         }
         return urlParameters
@@ -230,6 +240,11 @@ public struct BitsoEndPoint: EndPointType {
                 bodyParameters: nil,
                 bodyEncoding: .urlEncoding,
                 urlParameters: apiCall.urlParameters)
+        case .orders, .ordersWithOids, .ordersWithOrigin:
+            return .requestParameters(
+                bodyParameters: nil,
+                bodyEncoding: .urlEncoding,
+                urlParameters: apiCall.urlParameters)
         }
     }
 
@@ -285,6 +300,8 @@ public struct BitsoEndPoint: EndPointType {
             return "order_trades"
         case .openOrders:
             return "open_orders"
+        case .orders, .ordersWithOids, .ordersWithOrigin:
+            return "orders"
         }
     }
 
@@ -321,6 +338,8 @@ public struct BitsoEndPoint: EndPointType {
         case .orderTradesWithorigin:
             return .get
         case .openOrders:
+            return .get
+        case .orders, .ordersWithOids, .ordersWithOrigin:
             return .get
         }
     }

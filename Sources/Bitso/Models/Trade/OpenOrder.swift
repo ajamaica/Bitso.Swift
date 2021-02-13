@@ -6,7 +6,7 @@ public enum TradeStatus: String, Decodable {
     case partialFill = "partial-fill"
 }
 
-public struct OpenOrder: Decodable, Equatable {
+public struct Order: Decodable, Equatable {
         let book: BookSymbol
         let created_at: Date
         let oid: String
