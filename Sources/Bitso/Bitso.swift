@@ -310,7 +310,7 @@ public class Bitso {
     /**
      This endpoint returns a list of the user’s trades.
      */
-    func orderTrades(oid: String,
+    func orderTrades(oid: OrderId,
                     completion: @escaping (Result<[OrderTrade], BitsoError>) -> Void
     ) {
         request(apiCall: .orderTrades(oid: oid), completion: completion)
@@ -340,7 +340,7 @@ public class Bitso {
     /**
      Returns a list of details for 1 or more orders
      */
-    func orders(oid: String,
+    func orders(oid: OrderId,
                 completion: @escaping (Result<[Order], BitsoError>) -> Void
     ) {
         request(apiCall: .orders(oid: oid), completion: completion)
@@ -349,7 +349,7 @@ public class Bitso {
     /**
      Returns a list of details for 1 or more orders
      */
-    func ordersWithOids(oids: [String],
+    func ordersWithOids(oids: [OrderId],
                 completion: @escaping (Result<[Order], BitsoError>) -> Void
     ) {
         request(apiCall: .ordersWithOids(oids: oids), completion: completion)
@@ -358,10 +358,44 @@ public class Bitso {
     /**
      Returns a list of details for 1 or more orders
      */
-    func ordersWithOrigin(origin_ids: [String],
+    func ordersWithOrigin(origin_ids: [OrderId],
                 completion: @escaping (Result<[Order], BitsoError>) -> Void
     ) {
         request(apiCall: .ordersWithOrigin(origin_ids: origin_ids), completion: completion)
+    }
+
+    /**
+     Cancels open order(s)
+     */
+    func cancelOrder(oid: OrderId,
+                     completion: @escaping (Result<[OrderId], BitsoError>) -> Void
+    ) {
+        request(apiCall: .cancelOrder(oid: oid), completion: completion)
+    }
+    /**
+     Cancels open order(s)
+     */
+    func cancelOrderWithOids(oids: [OrderId],
+                     completion: @escaping (Result<[OrderId], BitsoError>) -> Void
+    ) {
+        request(apiCall: .cancelOrderWithOids(oids: oids), completion: completion)
+    }
+
+    /**
+     Cancels open order(s)
+     */
+    func cancelOrderWithOrigin(origin_ids: [String],
+                     completion: @escaping (Result<[OrderId], BitsoError>) -> Void
+    ) {
+        request(apiCall: .cancelOrderWithOrigin(origin_ids: origin_ids), completion: completion)
+    }
+
+    /**
+     Cancels open order(s)
+     */
+    func cancelAllOrders(completion: @escaping (Result<[OrderId], BitsoError>) -> Void
+    ) {
+        request(apiCall: .cancelAllOrders, completion: completion)
     }
 
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,

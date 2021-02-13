@@ -48,14 +48,19 @@ public enum BitsoAPICall {
     case userTrades(book: BookSymbol, sort: SortType?, limit: Int?, marker: String?)
     case userTradesTid(book: BookSymbol, sort: SortType?, limit: Int?, marker: String?)
     case userTradesTidTidTid(book: BookSymbol, sort: SortType?, limit: Int?, marker: String?)
-    case orderTrades(oid: String)
+    case orderTrades(oid: OrderId)
     case orderTradesWithorigin(origin_id: String)
 
     case openOrders(book: BookSymbol, marker: String?, sort: SortType?, limit: Int?)
 
-    case orders(oid: String)
-    case ordersWithOids(oids: [String])
+    case orders(oid: OrderId)
+    case ordersWithOids(oids: [OrderId])
     case ordersWithOrigin(origin_ids: [String])
+
+    case cancelOrder(oid: OrderId)
+    case cancelOrderWithOids(oids: [OrderId])
+    case cancelOrderWithOrigin(origin_ids: [String])
+    case cancelAllOrders
 }
 
 extension BitsoAPICall {
@@ -145,6 +150,12 @@ extension BitsoAPICall {
         case .ordersWithOids(let oids):
             urlParameters.setParameter(key: "oids", value: oids.joined(separator: ","))
         case .ordersWithOrigin(let origin_ids):
+            urlParameters.setParameter(key: "origin_ids", value: origin_ids)
+        case .cancelOrder(let oid):
+            urlParameters.setParameter(key: "oid", value: oid)
+        case .cancelOrderWithOids(let oids):
+            urlParameters.setParameter(key: "oids", value: oids)
+        case .cancelOrderWithOrigin(let origin_ids):
             urlParameters.setParameter(key: "origin_ids", value: origin_ids)
         default: break
         }
@@ -245,6 +256,11 @@ public struct BitsoEndPoint: EndPointType {
                 bodyParameters: nil,
                 bodyEncoding: .urlEncoding,
                 urlParameters: apiCall.urlParameters)
+        case .cancelOrder, .cancelOrderWithOids, .cancelOrderWithOrigin, .cancelAllOrders:
+            return .requestParameters(
+                bodyParameters: nil,
+                bodyEncoding: .urlEncoding,
+                urlParameters: apiCall.urlParameters)
         }
     }
 
@@ -300,8 +316,11 @@ public struct BitsoEndPoint: EndPointType {
             return "order_trades"
         case .openOrders:
             return "open_orders"
-        case .orders, .ordersWithOids, .ordersWithOrigin:
+        case .orders, .ordersWithOids, .ordersWithOrigin,
+             .cancelOrder, .cancelOrderWithOids, .cancelOrderWithOrigin:
             return "orders"
+        case .cancelAllOrders:
+            return "orders/all"
         }
     }
 
@@ -341,6 +360,8 @@ public struct BitsoEndPoint: EndPointType {
             return .get
         case .orders, .ordersWithOids, .ordersWithOrigin:
             return .get
+        case .cancelOrder, .cancelOrderWithOids, .cancelOrderWithOrigin, .cancelAllOrders:
+            return .delete
         }
     }
 

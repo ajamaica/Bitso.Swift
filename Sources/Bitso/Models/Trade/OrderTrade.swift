@@ -9,7 +9,7 @@ public struct OrderTrade: Decodable, Equatable {
     let fees_currency: CurrencyId
     let price: String
     let tid: TradeID
-    let oid: OrderID
+    let oid: OrderId
     let origin_id: String?
     let side: Side
     let make_side: Side
