@@ -11,5 +11,5 @@ public struct Bid: Equatable, Decodable {
     let book: BookSymbol
     let price: String
     let amount: String
-    let oid: OrderID?
+    let oid: OrderId?
 }

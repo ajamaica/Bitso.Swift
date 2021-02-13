@@ -7,7 +7,6 @@
 
 import Foundation
 
-public typealias OrderID = String
 public struct OrderBook: Equatable, Decodable {
     let asks: [Ask]
     let bids: [Bid]
