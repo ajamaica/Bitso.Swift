@@ -311,6 +311,62 @@ class BitsoTests: XCTestCase {
         }
         wait(for: [expectation], timeout: 0.1)
     }
+    
+    func test_openOrders() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let tuple: (session: URLSession, stub: BitsoResponse<[Order]>) = getMockURLSession(fileName: "open_orders")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.openOrders(book: "",marker: nil, sort: nil, limit: nil) { result in
+            if case let .success(openOrders) = result {
+                XCTAssertEqual(openOrders, tuple.stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
+    func test_orders() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let tuple: (session: URLSession, stub: BitsoResponse<[Order]>) = getMockURLSession(fileName: "orders")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.orders(oid: "") { result in
+            if case let .success(orders) = result {
+                XCTAssertEqual(orders, tuple.stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
+    func test_ordersWithOrigin() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let tuple: (session: URLSession, stub: BitsoResponse<[Order]>) = getMockURLSession(fileName: "orders")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.ordersWithOrigin(origin_ids: [""]) { result in
+            if case let .success(orders) = result {
+                XCTAssertEqual(orders, tuple.stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
+    func test_ordersWithOids() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let tuple: (session: URLSession, stub: BitsoResponse<[Order]>) = getMockURLSession(fileName: "orders")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.ordersWithOids(oids: [""]) { result in
+            if case let .success(orders) = result {
+                XCTAssertEqual(orders, tuple.stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
 
     func test_bitso_error() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")

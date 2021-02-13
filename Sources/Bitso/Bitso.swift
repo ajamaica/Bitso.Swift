@@ -325,6 +325,45 @@ public class Bitso {
         request(apiCall: .orderTradesWithorigin(origin_id: origin_id), completion: completion)
     }
 
+    /**
+     Returns a list of the user’s open orders.
+     */
+    func openOrders(book: BookSymbol,
+                     marker: String?,
+                     sort: SortType?,
+                     limit: Int?,
+                     completion: @escaping (Result<[Order], BitsoError>) -> Void
+    ) {
+        request(apiCall: .openOrders(book: book, marker: marker, sort: sort, limit: limit), completion: completion)
+    }
+
+    /**
+     Returns a list of details for 1 or more orders
+     */
+    func orders(oid: String,
+                completion: @escaping (Result<[Order], BitsoError>) -> Void
+    ) {
+        request(apiCall: .orders(oid: oid), completion: completion)
+    }
+
+    /**
+     Returns a list of details for 1 or more orders
+     */
+    func ordersWithOids(oids: [String],
+                completion: @escaping (Result<[Order], BitsoError>) -> Void
+    ) {
+        request(apiCall: .ordersWithOids(oids: oids), completion: completion)
+    }
+
+    /**
+     Returns a list of details for 1 or more orders
+     */
+    func ordersWithOrigin(origin_ids: [String],
+                completion: @escaping (Result<[Order], BitsoError>) -> Void
+    ) {
+        request(apiCall: .ordersWithOrigin(origin_ids: origin_ids), completion: completion)
+    }
+
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,
                                              completion: @escaping (Result<Payload, BitsoError>) -> Void ) {
         router.request(.init(
