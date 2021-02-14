@@ -395,7 +395,25 @@ class BitsoTests: XCTestCase {
         }
         wait(for: [expectation], timeout: 0.1)
     }
-
+    
+    func test_createOrder() throws {
+        let expectation = XCTestExpectation(description: "Fake Network Call")
+        let tuple: (session: URLSession, stub: BitsoResponse<PlacedOrder>) = getMockURLSession(fileName: "place_order")
+        let router = Router<BitsoEndPoint>(session: tuple.session)
+        let bitso = Bitso(key: key, secret: secret, environment: .developV3, router: router)
+        bitso.createOrder(book: "",
+                          side: .sell,
+                          amount: .major(amount: "0"),
+                          origin_id: "",
+                          time_in_force: .fillorkill) { result in
+            if case let .success(orders) = result {
+                XCTAssertEqual(orders, tuple.stub.payload)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
     func test_bitso_error() throws {
         let expectation = XCTestExpectation(description: "Fake Network Call")
 

@@ -14,3 +14,6 @@ public struct OrderTrade: Decodable, Equatable {
     let side: Side
     let make_side: Side
 }
+public struct PlacedOrder: Decodable, Equatable {
+    let oid: OrderId
+}
