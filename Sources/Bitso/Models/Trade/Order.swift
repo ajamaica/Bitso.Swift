@@ -6,6 +6,18 @@ public enum TradeStatus: String, Decodable {
     case partialFill = "partial-fill"
 }
 
+public enum OrderType: String, Decodable {
+    case market
+    case limit
+}
+
+public enum TimeInForce: String, Decodable {
+    case goodtillcancelled
+    case fillorkill
+    case immediateorcancel
+    case postonly
+}
+
 public typealias OrderId = String
 public struct Order: Decodable, Equatable {
         let book: BookSymbol
@@ -16,7 +28,7 @@ public struct Order: Decodable, Equatable {
         let price: String
         let side: Side
         let status: TradeStatus
-        let type: String
+        let type: OrderType
         let unfilled_amount: String
         let updated_at: Date
 }

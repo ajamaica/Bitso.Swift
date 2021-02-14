@@ -61,6 +61,15 @@ public enum BitsoAPICall {
     case cancelOrderWithOids(oids: [OrderId])
     case cancelOrderWithOrigin(origin_ids: [String])
     case cancelAllOrders
+
+    // type Market
+    case createMajorOrder(book: BookSymbol, side: Side, majorAmount: String, origin_id: String?, time_in_force: TimeInForce?)
+    case createMinorOrder(book: BookSymbol, side: Side, minorAmount: String, origin_id: String?, time_in_force: TimeInForce?)
+
+    // type Limit
+    case createMajorOrderLimit(book: BookSymbol, side: Side, majorAmount: String, price: String?, stop: String?, time_in_force: TimeInForce?, origin_id: String?)
+    case createMinorOrderLimit(book: BookSymbol, side: Side, minorAmount: String, price: String?, stop: String?, time_in_force: TimeInForce?, origin_id: String?)
+
 }
 
 extension BitsoAPICall {
@@ -73,6 +82,34 @@ extension BitsoAPICall {
             bodyParameters.setParameter(key: "phone_number", value: phone_number)
         case .phoneVerification(let verification_code):
             bodyParameters.setParameter(key: "verification_code", value: verification_code)
+        case .createMajorOrder(let book, let side, let majorAmount, let origin_id, let time_in_force):
+            bodyParameters.setParameter(key: "book", value: book)
+            bodyParameters.setParameter(key: "side", value: side)
+            bodyParameters.setParameter(key: "major", value: majorAmount)
+            bodyParameters.setParameter(key: "origin_id", value: origin_id)
+            bodyParameters.setParameter(key: "time_in_force", value: time_in_force)
+        case .createMinorOrder(let book, let side, let minorAmount, let origin_id, let time_in_force):
+            bodyParameters.setParameter(key: "book", value: book)
+            bodyParameters.setParameter(key: "side", value: side)
+            bodyParameters.setParameter(key: "minor", value: minorAmount)
+            bodyParameters.setParameter(key: "origin_id", value: origin_id)
+            bodyParameters.setParameter(key: "time_in_force", value: time_in_force)
+        case .createMajorOrderLimit(let book, let side, let majorAmount, let price, let stop, let time_in_force, let origin_id):
+            bodyParameters.setParameter(key: "book", value: book)
+            bodyParameters.setParameter(key: "side", value: side)
+            bodyParameters.setParameter(key: "major", value: majorAmount)
+            bodyParameters.setParameter(key: "price", value: price)
+            bodyParameters.setParameter(key: "stop", value: stop)
+            bodyParameters.setParameter(key: "origin_id", value: origin_id)
+            bodyParameters.setParameter(key: "time_in_force", value: time_in_force)
+        case .createMinorOrderLimit(let book, let side, let minorAmount, let price, let stop, let time_in_force, let origin_id):
+            bodyParameters.setParameter(key: "book", value: book)
+            bodyParameters.setParameter(key: "side", value: side)
+            bodyParameters.setParameter(key: "minor", value: minorAmount)
+            bodyParameters.setParameter(key: "price", value: price)
+            bodyParameters.setParameter(key: "stop", value: stop)
+            bodyParameters.setParameter(key: "origin_id", value: origin_id)
+            bodyParameters.setParameter(key: "time_in_force", value: time_in_force)
         default: break
         }
         return bodyParameters
@@ -261,6 +298,11 @@ public struct BitsoEndPoint: EndPointType {
                 bodyParameters: nil,
                 bodyEncoding: .urlEncoding,
                 urlParameters: apiCall.urlParameters)
+        case .createMajorOrder, .createMinorOrder, .createMajorOrderLimit, .createMinorOrderLimit:
+            return .requestParameters(
+                bodyParameters: apiCall.bodyParameters,
+                bodyEncoding: .urlEncoding,
+                urlParameters: nil)
         }
     }
 
@@ -321,6 +363,8 @@ public struct BitsoEndPoint: EndPointType {
             return "orders"
         case .cancelAllOrders:
             return "orders/all"
+        case .createMajorOrder, .createMinorOrder, .createMajorOrderLimit, .createMinorOrderLimit:
+            return "orders"
         }
     }
 
@@ -362,6 +406,8 @@ public struct BitsoEndPoint: EndPointType {
             return .get
         case .cancelOrder, .cancelOrderWithOids, .cancelOrderWithOrigin, .cancelAllOrders:
             return .delete
+        case .createMajorOrder, .createMinorOrder, .createMajorOrderLimit, .createMinorOrderLimit:
+            return .post
         }
     }
 
