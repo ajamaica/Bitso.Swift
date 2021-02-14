@@ -398,6 +398,40 @@ public class Bitso {
         request(apiCall: .cancelAllOrders, completion: completion)
     }
 
+    /*
+     Places a buy or sell order (both limit and market orders are available)
+     */
+    func createOrder(book: BookSymbol,
+                     side: Side,
+                     amount: OrderAmount,
+                     origin_id: String?,
+                     time_in_force: TimeInForce?,
+                     completion: @escaping (Result<PlacedOrder, BitsoError>) -> Void
+    ) {
+        request(apiCall: .createOrder(book: book, side: side, amount: amount, origin_id: origin_id, time_in_force: time_in_force), completion: completion)
+    }
+
+    /*
+     Places a buy or sell order (both limit and market orders are available)
+     */
+    func createOrderLimit(book: BookSymbol,
+                          side: Side,
+                          amount: OrderAmount,
+                          price: String,
+                          stop: String,
+                          time_in_force: TimeInForce?,
+                          origin_id: String?,
+                     completion: @escaping (Result<PlacedOrder, BitsoError>) -> Void
+    ) {
+        request(apiCall: .createOrderLimit(book: book,
+                                           side: side,
+                                           amount: amount,
+                                           price: price,
+                                           stop: stop,
+                                           time_in_force: time_in_force,
+                                           origin_id: origin_id), completion: completion)
+    }
+
     private func request<Payload: Decodable>(apiCall: BitsoAPICall,
                                              completion: @escaping (Result<Payload, BitsoError>) -> Void ) {
         router.request(.init(
