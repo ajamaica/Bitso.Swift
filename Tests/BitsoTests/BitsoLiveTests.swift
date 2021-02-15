@@ -36,27 +36,19 @@ class BitsoLiveCountWrapper {
 
 extension BitsoLiveCountWrapper: BitsoLiveEvents {
     func onSubscription(response: SubscriptionResponse) {
-        debugPrint(response)
         countSubscription += 1
     }
     
     func onTrade(response: TradeResponse) {
-        debugPrint(response)
         countTrade += 1
     }
     
     func onDiffOrder(response: DiffOrderResponse) {
-        debugPrint(response)
         countDiffOrder += 1
     }
     
     func onOrder(response: OrderResponse) {
-        debugPrint(response)
         countOrder += 1
-    }
-    
-    func recivedText(string: String) {
-        debugPrint(string)
     }
     
     func connected() {

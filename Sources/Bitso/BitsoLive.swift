@@ -89,10 +89,9 @@ public protocol BitsoLiveEvents: class {
     func onTrade(response: TradeResponse)
     func onDiffOrder(response: DiffOrderResponse)
     func onOrder(response: OrderResponse)
-    func recivedText(string: String)
 }
 
-public protocol BitsoWebSocket: class {
+public protocol BitsoWebSocketEvents: class {
     func connected(_: [String: String])
     func disconnected(_: String, _: UInt16)
     func text(_: String)
@@ -108,7 +107,7 @@ public protocol BitsoWebSocket: class {
 public class BitsoLive {
     private var socket: WebSocket?
     private weak var delegate: BitsoLiveEvents?
-    private weak var webSocketDelegate: BitsoWebSocket?
+    private weak var webSocketDelegate: BitsoWebSocketEvents?
     private var enableDebugLogs: Bool = false
 
     func start(delegate: BitsoLiveEvents, enableDebugLogs: Bool = false) {
