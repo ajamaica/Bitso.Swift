@@ -13,7 +13,7 @@ import Foundation
 // It also allows reuse for diferent Endpoint on the app
 public typealias Key = String
 public typealias Secret = String
-protocol EndPointType {
+public protocol EndPointType {
     var baseURL: URL { get }
     var path: String { get }
     var httpMethod: HTTPMethod { get }

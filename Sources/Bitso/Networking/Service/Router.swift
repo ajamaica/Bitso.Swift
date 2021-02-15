@@ -16,7 +16,7 @@ protocol NetworkRouter: class {
     func cancel()
 }
 
-class Router<EndPoint: EndPointType>: NetworkRouter {
+public class Router<EndPoint: EndPointType>: NetworkRouter {
     // Urlsession task reference
     private var task: URLSessionTask?
     private let session: URLSession

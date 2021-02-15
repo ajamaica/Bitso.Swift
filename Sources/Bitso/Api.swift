@@ -207,16 +207,16 @@ public struct BitsoEndPoint: EndPointType {
         self.bitsoKey = key
         self.bitsoSecret = secret
     }
-    var key: Key {
+    public var key: Key {
         return bitsoKey
     }
-    var secret: BitsoKey {
+    public var secret: BitsoKey {
         return bitsoSecret
     }
-    var baseURL: URL {
+    public var baseURL: URL {
         return enviroment.getEnviromentURL()
     }
-    var task: HTTPTask {
+    public var task: HTTPTask {
         switch apiCall {
         case .available_books:
             return .request
@@ -301,7 +301,7 @@ public struct BitsoEndPoint: EndPointType {
         }
     }
 
-    var path: String {
+    public var path: String {
         switch apiCall {
         case .available_books:
             return "available_books"
@@ -363,7 +363,7 @@ public struct BitsoEndPoint: EndPointType {
         }
     }
 
-    var httpMethod: HTTPMethod {
+    public var httpMethod: HTTPMethod {
         switch apiCall {
         case .available_books:
             return .get
@@ -406,7 +406,7 @@ public struct BitsoEndPoint: EndPointType {
         }
     }
 
-    var headers: HTTPHeaders? {
+    public var headers: HTTPHeaders? {
         return nil
     }
 }
