@@ -7,4 +7,4 @@
 
 import Foundation
 
-typealias UserTrade = OrderTrade
+public typealias UserTrade = OrderTrade
