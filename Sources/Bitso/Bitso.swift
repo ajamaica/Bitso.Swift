@@ -9,7 +9,7 @@ public class Bitso {
     private let key: BitsoKey
     private let secret: BitsoSecret
 
-    init(key: BitsoKey,
+    public init(key: BitsoKey,
          secret: BitsoSecret,
          environment: BitsoNetworkEnvironment,
          router: Router<BitsoEndPoint> = Router<BitsoEndPoint>(session: URLSession.shared)
