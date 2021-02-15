@@ -23,7 +23,7 @@ public class Router<EndPoint: EndPointType>: NetworkRouter {
     private let enableDebugLogs: Bool
 
     // By using a default argument (in this case .shared) we can add dependency
-    init(session: URLSession = .shared, enableDebugLogs: Bool = false) {
+    public init(session: URLSession = .shared, enableDebugLogs: Bool = false) {
         self.session = session
         self.enableDebugLogs = enableDebugLogs
     }
