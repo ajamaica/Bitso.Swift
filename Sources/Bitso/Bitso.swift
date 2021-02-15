@@ -287,10 +287,10 @@ public class Bitso {
      This endpoint returns a list of the user’s trades.
      */
     func userTradesTid(book: BookSymbol,
-                    sort: SortType?,
-                    limit: Int?,
-                    marker: String?,
-                    completion: @escaping (Result<[UserTrade], BitsoError>) -> Void
+                       sort: SortType?,
+                       limit: Int?,
+                       marker: String?,
+                       completion: @escaping (Result<[UserTrade], BitsoError>) -> Void
     ) {
         request(apiCall: .userTradesTid(book: book, sort: sort, limit: limit, marker: marker), completion: completion)
     }
@@ -299,10 +299,10 @@ public class Bitso {
      This endpoint returns a list of the user’s trades.
      */
     func userTradesTidTidTid(book: BookSymbol,
-                    sort: SortType?,
-                    limit: Int?,
-                    marker: String?,
-                    completion: @escaping (Result<[UserTrade], BitsoError>) -> Void
+                             sort: SortType?,
+                             limit: Int?,
+                             marker: String?,
+                             completion: @escaping (Result<[UserTrade], BitsoError>) -> Void
     ) {
         request(apiCall: .userTradesTidTidTid(book: book, sort: sort, limit: limit, marker: marker), completion: completion)
     }
@@ -311,7 +311,7 @@ public class Bitso {
      This endpoint returns a list of the user’s trades.
      */
     func orderTrades(oid: OrderId,
-                    completion: @escaping (Result<[OrderTrade], BitsoError>) -> Void
+                     completion: @escaping (Result<[OrderTrade], BitsoError>) -> Void
     ) {
         request(apiCall: .orderTrades(oid: oid), completion: completion)
     }
@@ -320,7 +320,7 @@ public class Bitso {
      This endpoint returns a list of the user’s trades.
      */
     func orderTradesWithorigin(origin_id: String,
-                    completion: @escaping (Result<[OrderTrade], BitsoError>) -> Void
+                               completion: @escaping (Result<[OrderTrade], BitsoError>) -> Void
     ) {
         request(apiCall: .orderTradesWithorigin(origin_id: origin_id), completion: completion)
     }
@@ -329,10 +329,10 @@ public class Bitso {
      Returns a list of the user’s open orders.
      */
     func openOrders(book: BookSymbol,
-                     marker: String?,
-                     sort: SortType?,
-                     limit: Int?,
-                     completion: @escaping (Result<[Order], BitsoError>) -> Void
+                    marker: String?,
+                    sort: SortType?,
+                    limit: Int?,
+                    completion: @escaping (Result<[Order], BitsoError>) -> Void
     ) {
         request(apiCall: .openOrders(book: book, marker: marker, sort: sort, limit: limit), completion: completion)
     }
@@ -350,7 +350,7 @@ public class Bitso {
      Returns a list of details for 1 or more orders
      */
     func ordersWithOids(oids: [OrderId],
-                completion: @escaping (Result<[Order], BitsoError>) -> Void
+                        completion: @escaping (Result<[Order], BitsoError>) -> Void
     ) {
         request(apiCall: .ordersWithOids(oids: oids), completion: completion)
     }
@@ -359,7 +359,7 @@ public class Bitso {
      Returns a list of details for 1 or more orders
      */
     func ordersWithOrigin(origin_ids: [OrderId],
-                completion: @escaping (Result<[Order], BitsoError>) -> Void
+                          completion: @escaping (Result<[Order], BitsoError>) -> Void
     ) {
         request(apiCall: .ordersWithOrigin(origin_ids: origin_ids), completion: completion)
     }
@@ -376,7 +376,7 @@ public class Bitso {
      Cancels open order(s)
      */
     func cancelOrderWithOids(oids: [OrderId],
-                     completion: @escaping (Result<[OrderId], BitsoError>) -> Void
+                             completion: @escaping (Result<[OrderId], BitsoError>) -> Void
     ) {
         request(apiCall: .cancelOrderWithOids(oids: oids), completion: completion)
     }
@@ -385,7 +385,7 @@ public class Bitso {
      Cancels open order(s)
      */
     func cancelOrderWithOrigin(origin_ids: [String],
-                     completion: @escaping (Result<[OrderId], BitsoError>) -> Void
+                               completion: @escaping (Result<[OrderId], BitsoError>) -> Void
     ) {
         request(apiCall: .cancelOrderWithOrigin(origin_ids: origin_ids), completion: completion)
     }
@@ -421,7 +421,7 @@ public class Bitso {
                           stop: String,
                           time_in_force: TimeInForce?,
                           origin_id: String?,
-                     completion: @escaping (Result<PlacedOrder, BitsoError>) -> Void
+                          completion: @escaping (Result<PlacedOrder, BitsoError>) -> Void
     ) {
         request(apiCall: .createOrderLimit(book: book,
                                            side: side,
