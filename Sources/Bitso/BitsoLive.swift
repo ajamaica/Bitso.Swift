@@ -34,9 +34,9 @@ public struct LiveTrade: Decodable {
     let a: String
     let r: String
     let v: String
-    let t: Int?
     let mo: String?
     let to: String?
+    let t: Int?
 }
 
 public struct TradeResponse: LiveResponse, Decodable {
@@ -109,8 +109,10 @@ public class BitsoLive {
     private var socket: WebSocket?
     private weak var delegate: BitsoLiveEvents?
     private weak var webSocketDelegate: BitsoWebSocket?
+    private var enableDebugLogs: Bool = false
 
-    func start(delegate: BitsoLiveEvents) {
+    func start(delegate: BitsoLiveEvents, enableDebugLogs: Bool = false) {
+        self.enableDebugLogs = enableDebugLogs
         var request = URLRequest(url: URL(string: "wss://ws.bitso.com")!)
         request.timeoutInterval = 5
         socket = WebSocket(request: request)
@@ -152,27 +154,37 @@ extension BitsoLive: WebSocketDelegate {
     public func didReceive(event: WebSocketEvent, client: WebSocket) {
         switch event {
         case .connected(let headers):
+            if enableDebugLogs { debugPrint("conected with headers \(headers)") }
             webSocketDelegate?.connected(headers)
             delegate?.connected()
         case .disconnected(let reason, let code):
+            if enableDebugLogs { debugPrint("disconnected with reason \(reason) \(code)") }
             webSocketDelegate?.disconnected(reason, code)
             delegate?.disconnected(error: nil)
         case .text(let string):
+            if enableDebugLogs { debugPrint("text \(string)") }
             webSocketDelegate?.text(string)
             onText(string: string)
         case .binary(let data):
+            if enableDebugLogs { debugPrint("binary") }
             webSocketDelegate?.binary(data)
         case .ping(let data):
+            if enableDebugLogs { debugPrint("ping") }
             webSocketDelegate?.ping(data)
         case .pong(let data):
+            if enableDebugLogs { debugPrint("pong") }
             webSocketDelegate?.pong(data)
         case .viabilityChanged(let visible):
+            if enableDebugLogs { debugPrint("viabilityChanged \(visible)") }
             webSocketDelegate?.viabilityChanged(visible)
         case .reconnectSuggested(let reconnect):
+            if enableDebugLogs { debugPrint("reconnectSuggested \(reconnect)") }
             webSocketDelegate?.reconnectSuggested(reconnect)
         case .cancelled:
+            if enableDebugLogs { debugPrint("cancelled") }
             webSocketDelegate?.cancelled()
         case .error(let error):
+            if enableDebugLogs { debugPrint("error \(error?.localizedDescription ?? "")") }
             webSocketDelegate?.error(error)
             debugPrint(error!)
         }
