@@ -110,7 +110,7 @@ public class BitsoLive {
     private weak var webSocketDelegate: BitsoWebSocketEvents?
     private var enableDebugLogs: Bool = false
 
-    func start(delegate: BitsoLiveEvents, webSocketDelegate: BitsoWebSocketEvents? = nil, enableDebugLogs: Bool = false) {
+    public func start(delegate: BitsoLiveEvents, webSocketDelegate: BitsoWebSocketEvents? = nil, enableDebugLogs: Bool = false) {
         self.enableDebugLogs = enableDebugLogs
         var request = URLRequest(url: URL(string: "wss://ws.bitso.com")!)
         request.timeoutInterval = 5
@@ -121,17 +121,17 @@ public class BitsoLive {
         self.webSocketDelegate = webSocketDelegate
     }
 
-    func subscribeToTrades(book: BookSymbol) -> Bool {
+    public func subscribeToTrades(book: BookSymbol) -> Bool {
         let request = LiveRequest(action: .subscribe, book: book, type: .trades)
         return writeToSocket(request: request)
     }
 
-    func subscribeToDiffOrders(book: BookSymbol) -> Bool {
+    public func subscribeToDiffOrders(book: BookSymbol) -> Bool {
         let request = LiveRequest(action: .subscribe, book: book, type: .diff_orders)
         return writeToSocket(request: request)
     }
 
-    func subscribeToOrders(book: BookSymbol) -> Bool {
+    public func subscribeToOrders(book: BookSymbol) -> Bool {
         let request = LiveRequest(action: .subscribe, book: book, type: .orders)
         return writeToSocket(request: request)
     }
@@ -143,7 +143,7 @@ public class BitsoLive {
         return true
     }
 
-    func disconnect() {
+    public func disconnect() {
         socket?.disconnect()
         socket = nil
         delegate = nil
