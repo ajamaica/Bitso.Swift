@@ -110,7 +110,7 @@ public class BitsoLive {
     private weak var webSocketDelegate: BitsoWebSocketEvents?
     private var enableDebugLogs: Bool = false
 
-    func start(delegate: BitsoLiveEvents, enableDebugLogs: Bool = false) {
+    func start(delegate: BitsoLiveEvents, webSocketDelegate: BitsoWebSocketEvents? = nil, enableDebugLogs: Bool = false) {
         self.enableDebugLogs = enableDebugLogs
         var request = URLRequest(url: URL(string: "wss://ws.bitso.com")!)
         request.timeoutInterval = 5
@@ -118,6 +118,7 @@ public class BitsoLive {
         socket?.delegate = self
         socket?.connect()
         self.delegate = delegate
+        self.webSocketDelegate = webSocketDelegate
     }
 
     func subscribeToTrades(book: BookSymbol) -> Bool {
