@@ -1,6 +1,6 @@
 import Foundation
 
-struct AccountStatus: Decodable, Equatable {
+public struct AccountStatus: Decodable, Equatable {
     let client_id: String
     let first_name: String
     let last_name: String
