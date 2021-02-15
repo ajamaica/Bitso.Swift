@@ -20,7 +20,8 @@ The idea is to sustitute the old archived repo using the v3 api. This project is
 ## Bitso
 
 The simplest way to use it is this:
-```import Bitso
+```
+import Bitso
 
 let router = Router<BitsoEndPoint>()
 let bitso = Bitso(key: "API_KEY", secret: "API_KEY", environment: .developV3, router: router) 
@@ -37,23 +38,28 @@ This call will ask for the curent trades for btc_mxn and return the trade object
 
 Take a look at the Router.  This is the default BitsoEndPoint that enables the calls wrapping URLSession.shared. This also controls the logging. You can implement your Router using your own network library if you want in the future. This can also enable future compatibility for linux, since this has all the networking call sepaeating the logic accordingly.
 
-```let router = Router<BitsoEndPoint>()
+```
+let router = Router<BitsoEndPoint>()
 ```
 
 To enable logs and another session.
-```let router = Router<BitsoEndPoint>(session: .shared, enableDebugLogs: true)
+```
+let router = Router<BitsoEndPoint>(session: .shared, enableDebugLogs: true)
 ```
 
 The Bitso object is the most important object it gets the key and secret. This can obtain from the [user panel](https://bitso.com/api_setup). 
-```let bitso = Bitso(key: "API_KEY", secret: "API_KEY", environment: .developV3, router: router) 
+```
+let bitso = Bitso(key: "API_KEY", secret: "API_KEY", environment: .developV3, router: router) 
 ```
 There are 2 available enviroments :
-```case productionV3 = "https://api.bitso.com/v3/"
+```
+case productionV3 = "https://api.bitso.com/v3/"
 case developV3 = "https://api-dev.bitso.com/v3/"
 ```
 
 This are the available calls for Bitso
-```/* Private */
+```
+/* Private */
 case available_books
 case ticker(bookID: BookSymbol)
 case order_book(bookID: BookSymbol, aggregate: Bool?)
@@ -109,23 +115,27 @@ In addition to the normal api, there is a Live api (realtime, websockets...). Th
 
 To use it :
 
-```let live = BitsoLive()
+```
+let live = BitsoLive()
 live.start(delegate: self)
 ```
 
 The delegate must comply the BitsoLiveEvents protocol. I also add a pure websocket implementation using BitsoWebSocketEvents. This last one is optional.
 
-```let live = BitsoLive()
+```
+let live = BitsoLive()
 live.start(delegate: self, webSocketDelegate: self)
 ```
 logging is also available 
-```let live = BitsoLive()
+```
+let live = BitsoLive()
 live.start(delegate: self, webSocketDelegate: self, enableDebugLogs: true)
 ```
 
 To get the output use the delegate
 
-```extension BitsoLiveCountWrapper: BitsoLiveEvents {
+```
+extension BitsoLiveCountWrapper: BitsoLiveEvents {
     func onSubscription(response: SubscriptionResponse) {
 
     }
