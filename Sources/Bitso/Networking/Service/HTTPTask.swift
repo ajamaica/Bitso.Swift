@@ -8,10 +8,10 @@
 import Foundation
 
 // HTTP Header Abstation
-typealias HTTPHeaders = [String: String]
+public typealias HTTPHeaders = [String: String]
 
 // Allows normal call or with Headers or with Parameters
-enum HTTPTask {
+public enum HTTPTask {
     case request
 
     case requestParameters(bodyParameters: Parameters?,

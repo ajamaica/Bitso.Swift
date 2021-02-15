@@ -7,9 +7,9 @@
 
 import Foundation
 
-typealias Parameters = [String: Any]
+public typealias Parameters = [String: Any]
 
-extension Parameters {
+public extension Parameters {
     mutating func setParameter(key: String, value: Any?) {
         if let value = value {
             self[key] = value
@@ -20,7 +20,7 @@ protocol ParameterEncoder {
     func encode(urlRequest: inout URLRequest, with parameters: Parameters) throws
 }
 
-enum ParameterEncoding {
+public enum ParameterEncoding {
 
     case urlEncoding
     case jsonEncoding
