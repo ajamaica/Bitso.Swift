@@ -23,14 +23,14 @@ public class Bitso {
     /**
      This endpoint returns a list of existing exchange order books and their respective order placement limits.
      */
-    func available_books(completion: @escaping (Result<[Book], BitsoError>) -> Void ) {
+    public func available_books(completion: @escaping (Result<[Book], BitsoError>) -> Void ) {
         request(apiCall: .available_books, completion: completion)
     }
 
     /**
      This endpoint returns trading information from the specified book.
      */
-    func tickerFor(bookID: BookSymbol, completion: @escaping (Result<Ticker, BitsoError>) -> Void ) {
+    public func tickerFor(bookID: BookSymbol, completion: @escaping (Result<Ticker, BitsoError>) -> Void ) {
         request(apiCall: .ticker(bookID: bookID), completion: completion)
     }
 
@@ -39,14 +39,14 @@ public class Bitso {
      orders will be aggregated by price, and the response will only include the top 50 orders for each side of the book.
      If the aggregate parameter is set to false, the response will include the full order book.
      */
-    func orderBookFor(bookID: BookSymbol, aggregate: Bool = true, completion: @escaping (Result<OrderBook, BitsoError>) -> Void ) {
+    public func orderBookFor(bookID: BookSymbol, aggregate: Bool = true, completion: @escaping (Result<OrderBook, BitsoError>) -> Void ) {
         request(apiCall: .order_book(bookID: bookID, aggregate: aggregate), completion: completion)
     }
 
     /**
      This endpoint returns a list of recent trades from the specified book.
      */
-    func tradesFor(bookID: BookSymbol,
+    public func tradesFor(bookID: BookSymbol,
                    marker: Bool?,
                    sort: SortType?,
                    limit: Int?,
@@ -58,35 +58,35 @@ public class Bitso {
      This endpoint returns information concerning the user’s account status,
      documents uploaded, and transaction limits.
      */
-    func accountStatus(completion: @escaping (Result<AccountStatus, BitsoError>) -> Void ) {
+    public func accountStatus(completion: @escaping (Result<AccountStatus, BitsoError>) -> Void ) {
         request(apiCall: .account_status, completion: completion)
     }
 
     /**
      This endpoint is used to register Mobile phone number for verification.
      */
-    func phoneNumber(phone_number: String, completion: @escaping (Result<Phone, BitsoError>) -> Void ) {
+    public func phoneNumber(phone_number: String, completion: @escaping (Result<Phone, BitsoError>) -> Void ) {
         request(apiCall: .phoneNumber(phone_number: phone_number), completion: completion)
     }
 
     /**
      This endpoint is used to verify a registered mobile phone number
      */
-    func phoneVerification(verification_code: String, completion: @escaping (Result<Phone, BitsoError>) -> Void ) {
+    public func phoneVerification(verification_code: String, completion: @escaping (Result<Phone, BitsoError>) -> Void ) {
         request(apiCall: .phoneVerification(verification_code: verification_code), completion: completion)
     }
 
     /**
      This endpoint returns information concerning the user’s balances for all supported currencies.
      */
-    func balance(completion: @escaping (Result<Balances, BitsoError>) -> Void ) {
+    public func balance(completion: @escaping (Result<Balances, BitsoError>) -> Void ) {
         request(apiCall: .balance, completion: completion)
     }
 
     /**
      Returns a list of all the user’s registered operations.
      */
-    func ledger(marker: String?,
+    public func ledger(marker: String?,
                 sort: SortType?,
                 limit: Int?,
                 completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
@@ -96,7 +96,7 @@ public class Bitso {
     /**
      Returns a list of all the user’s registered operations.
      */
-    func ledgerTrades(marker: String?,
+    public func ledgerTrades(marker: String?,
                       sort: SortType?,
                       limit: Int?,
                       completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
@@ -106,7 +106,7 @@ public class Bitso {
     /**
      Returns a list of all the user’s registered operations.
      */
-    func ledgerFees(marker: String?,
+    public func ledgerFees(marker: String?,
                     sort: SortType?,
                     limit: Int?,
                     completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
@@ -116,7 +116,7 @@ public class Bitso {
     /**
      Returns a list of all the user’s registered operations.
      */
-    func ledgerFundings(marker: String?,
+    public func ledgerFundings(marker: String?,
                         sort: SortType?,
                         limit: Int?,
                         completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
@@ -126,7 +126,7 @@ public class Bitso {
     /**
      Returns a list of all the user’s registered operations.
      */
-    func ledgerWithdrawals(marker: String?,
+    public func ledgerWithdrawals(marker: String?,
                            sort: SortType?,
                            limit: Int?,
                            completion: @escaping (Result<[Ledger], BitsoError>) -> Void ) {
@@ -137,14 +137,14 @@ public class Bitso {
      This endpoint returns information on customer fees for all
      available order books, and withdrawal fees for applicable currencies.
      */
-    func fees(completion: @escaping (Result<CustomerFees, BitsoError>) -> Void ) {
+    public func fees(completion: @escaping (Result<CustomerFees, BitsoError>) -> Void ) {
         request(apiCall: .fees, completion: completion)
     }
 
     /*
      Returns detailed info on a user’s fund withdrawals.
      */
-    func withdrawals(wid: WithdrawalId,
+    public func withdrawals(wid: WithdrawalId,
                      marker: String?,
                      limit: Int?,
                      status: Status?,
@@ -161,7 +161,7 @@ public class Bitso {
     /*
      Returns detailed info on a user’s fund withdrawals.
      */
-    func withdrawalsForWid(wid: WithdrawalId,
+    public func withdrawalsForWid(wid: WithdrawalId,
                            marker: String?,
                            limit: Int?,
                            status: Status?,
@@ -178,7 +178,7 @@ public class Bitso {
     /*
      Returns detailed info on a user’s fund withdrawals.
      */
-    func withdrawalsForWids(wids: [WithdrawalId],
+    public func withdrawalsForWids(wids: [WithdrawalId],
                             marker: String?,
                             limit: Int?,
                             status: Status?,
@@ -195,7 +195,7 @@ public class Bitso {
     /*
      Returns detailed info on a user’s fund withdrawals.
      */
-    func withdrawalsForOrigin(origin_ids: [OriginID],
+    public func withdrawalsForOrigin(origin_ids: [OriginID],
                               marker: String?,
                               limit: Int?,
                               status: Status?,
@@ -211,7 +211,7 @@ public class Bitso {
     /**
      Returns detailed info on a user’s fundings.
      */
-    func fundings(txids: [String],
+    public func fundings(txids: [String],
                   completion: @escaping (Result<[Funding], BitsoError>) -> Void
     ) {
         request(apiCall: .fundings(marker: nil, limit: nil, status: nil, method: nil, txids: txids), completion: completion)
@@ -219,7 +219,7 @@ public class Bitso {
     /**
      Returns detailed info on a user’s fundings.
      */
-    func fundings(marker: String?,
+    public func fundings(marker: String?,
                   limit: Int?,
                   status: Status?,
                   method: String?,
@@ -230,7 +230,7 @@ public class Bitso {
     /**
      Returns detailed info on a user’s fundings.
      */
-    func fundingsTid(marker: String?,
+    public func fundingsTid(marker: String?,
                      limit: Int?,
                      status: Status?,
                      method: String?,
@@ -241,7 +241,7 @@ public class Bitso {
     /**
      Returns detailed info on a user’s fundings.
      */
-    func fundingsTid(txids: [String],
+    public func fundingsTid(txids: [String],
                      completion: @escaping (Result<[Funding], BitsoError>) -> Void
     ) {
         request(apiCall: .fundingsTid(marker: nil, limit: nil, status: nil, method: nil, txids: txids), completion: completion)
@@ -249,7 +249,7 @@ public class Bitso {
     /**
      Returns detailed info on a user’s fundings.
      */
-    func fundingsTidTidTid(marker: String?,
+    public func fundingsTidTidTid(marker: String?,
                            limit: Int?,
                            status: Status?,
                            method: String?,
@@ -265,7 +265,7 @@ public class Bitso {
     /**
      Returns detailed info on a user’s fundings.
      */
-    func fundingsTidTidTid(txids: [String],
+    public func fundingsTidTidTid(txids: [String],
                            completion: @escaping (Result<[Funding], BitsoError>) -> Void
     ) {
         request(apiCall: .fundingsTidTidTid(marker: nil, limit: nil, status: nil, method: nil, txids: txids), completion: completion)
@@ -274,7 +274,7 @@ public class Bitso {
     /**
      This endpoint returns a list of the user’s trades.
      */
-    func userTrades(book: BookSymbol,
+    public func userTrades(book: BookSymbol,
                     sort: SortType?,
                     limit: Int?,
                     marker: String?,
@@ -286,7 +286,7 @@ public class Bitso {
     /**
      This endpoint returns a list of the user’s trades.
      */
-    func userTradesTid(book: BookSymbol,
+    public func userTradesTid(book: BookSymbol,
                        sort: SortType?,
                        limit: Int?,
                        marker: String?,
@@ -298,7 +298,7 @@ public class Bitso {
     /**
      This endpoint returns a list of the user’s trades.
      */
-    func userTradesTidTidTid(book: BookSymbol,
+    public func userTradesTidTidTid(book: BookSymbol,
                              sort: SortType?,
                              limit: Int?,
                              marker: String?,
@@ -310,7 +310,7 @@ public class Bitso {
     /**
      This endpoint returns a list of the user’s trades.
      */
-    func orderTrades(oid: OrderId,
+    public func orderTrades(oid: OrderId,
                      completion: @escaping (Result<[OrderTrade], BitsoError>) -> Void
     ) {
         request(apiCall: .orderTrades(oid: oid), completion: completion)
@@ -319,7 +319,7 @@ public class Bitso {
     /**
      This endpoint returns a list of the user’s trades.
      */
-    func orderTradesWithorigin(origin_id: String,
+    public func orderTradesWithorigin(origin_id: String,
                                completion: @escaping (Result<[OrderTrade], BitsoError>) -> Void
     ) {
         request(apiCall: .orderTradesWithorigin(origin_id: origin_id), completion: completion)
@@ -328,7 +328,7 @@ public class Bitso {
     /**
      Returns a list of the user’s open orders.
      */
-    func openOrders(book: BookSymbol,
+    public func openOrders(book: BookSymbol,
                     marker: String?,
                     sort: SortType?,
                     limit: Int?,
@@ -340,7 +340,7 @@ public class Bitso {
     /**
      Returns a list of details for 1 or more orders
      */
-    func orders(oid: OrderId,
+    public func orders(oid: OrderId,
                 completion: @escaping (Result<[Order], BitsoError>) -> Void
     ) {
         request(apiCall: .orders(oid: oid), completion: completion)
@@ -349,7 +349,7 @@ public class Bitso {
     /**
      Returns a list of details for 1 or more orders
      */
-    func ordersWithOids(oids: [OrderId],
+    public func ordersWithOids(oids: [OrderId],
                         completion: @escaping (Result<[Order], BitsoError>) -> Void
     ) {
         request(apiCall: .ordersWithOids(oids: oids), completion: completion)
@@ -358,7 +358,7 @@ public class Bitso {
     /**
      Returns a list of details for 1 or more orders
      */
-    func ordersWithOrigin(origin_ids: [OrderId],
+    public func ordersWithOrigin(origin_ids: [OrderId],
                           completion: @escaping (Result<[Order], BitsoError>) -> Void
     ) {
         request(apiCall: .ordersWithOrigin(origin_ids: origin_ids), completion: completion)
@@ -367,7 +367,7 @@ public class Bitso {
     /**
      Cancels open order(s)
      */
-    func cancelOrder(oid: OrderId,
+    public func cancelOrder(oid: OrderId,
                      completion: @escaping (Result<[OrderId], BitsoError>) -> Void
     ) {
         request(apiCall: .cancelOrder(oid: oid), completion: completion)
@@ -375,7 +375,7 @@ public class Bitso {
     /**
      Cancels open order(s)
      */
-    func cancelOrderWithOids(oids: [OrderId],
+    public func cancelOrderWithOids(oids: [OrderId],
                              completion: @escaping (Result<[OrderId], BitsoError>) -> Void
     ) {
         request(apiCall: .cancelOrderWithOids(oids: oids), completion: completion)
@@ -384,7 +384,7 @@ public class Bitso {
     /**
      Cancels open order(s)
      */
-    func cancelOrderWithOrigin(origin_ids: [String],
+    public func cancelOrderWithOrigin(origin_ids: [String],
                                completion: @escaping (Result<[OrderId], BitsoError>) -> Void
     ) {
         request(apiCall: .cancelOrderWithOrigin(origin_ids: origin_ids), completion: completion)
@@ -393,7 +393,7 @@ public class Bitso {
     /**
      Cancels open order(s)
      */
-    func cancelAllOrders(completion: @escaping (Result<[OrderId], BitsoError>) -> Void
+    public func cancelAllOrders(completion: @escaping (Result<[OrderId], BitsoError>) -> Void
     ) {
         request(apiCall: .cancelAllOrders, completion: completion)
     }
@@ -401,7 +401,7 @@ public class Bitso {
     /*
      Places a buy or sell order (both limit and market orders are available)
      */
-    func createOrder(book: BookSymbol,
+    public func createOrder(book: BookSymbol,
                      side: Side,
                      amount: OrderAmount,
                      origin_id: String?,
@@ -414,7 +414,7 @@ public class Bitso {
     /*
      Places a buy or sell order (both limit and market orders are available)
      */
-    func createOrderLimit(book: BookSymbol,
+    public func createOrderLimit(book: BookSymbol,
                           side: Side,
                           amount: OrderAmount,
                           price: String,
