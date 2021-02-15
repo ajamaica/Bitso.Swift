@@ -110,6 +110,8 @@ public class BitsoLive {
     private weak var webSocketDelegate: BitsoWebSocketEvents?
     private var enableDebugLogs: Bool = false
 
+    public init() {}
+
     public func start(delegate: BitsoLiveEvents, webSocketDelegate: BitsoWebSocketEvents? = nil, enableDebugLogs: Bool = false) {
         self.enableDebugLogs = enableDebugLogs
         var request = URLRequest(url: URL(string: "wss://ws.bitso.com")!)
